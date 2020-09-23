@@ -32,7 +32,7 @@ jobs:
           cd mxe
           echo "JOBS := 4" >> settings.mk
           echo "MXE_TARGETS := ${{ matrix.target }}" >> settings.mk
-          make gcc ffmpeg libass jpeg lua luajit
+          make gcc ffmpeg libass jpeg lua
           cd ..
       - name: checkout mpv
         run: |
@@ -90,6 +90,10 @@ jobs:
       matrix:
         target: [armv7l, arm64, x86, x86_64]
     steps:          
+      - name: prepare toolchain
+        run: |
+          sudo apt-get update -qq ;
+          sudo apt-get install -qq nasm;
       - name: Check out code 
         uses: actions/checkout@v2
         with:
