@@ -34,7 +34,7 @@ unset CC
 
 meson $build \
 	--buildtype release --cross-file $build/crossfile.txt \
-	--default-library static
+	-Denable_avx512=false --default-library static
 
 ninja -C $build -j$cores
 ninja -C $build install

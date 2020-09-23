@@ -61,6 +61,7 @@ jobs:
       - name: prepare dependencies
         run: |
           brew install yasm
+          brew uninstall brotli
 
       - name: Check out code 
         uses: actions/checkout@v2
@@ -88,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [armv7l, arm64]
+        target: [armv7l, arm64, x86, x86_64]
     steps:          
       - name: prepare toolchain
         run: |
