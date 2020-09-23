@@ -69,6 +69,8 @@ jobs:
 
       - name: build mpv
         run: |
+          pwd
+          ls -l
           cd ios
           ./download.sh 
           ./build.sh -e ${{ matrix.target }}
@@ -81,3 +83,29 @@ jobs:
         with:
           path: binary
           name: mpv-ios-${{ matrix.target }}
+
+  Android:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [armv7l, arm64, x86, x86_64]
+    steps:          
+      - name: Check out code 
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: build mpv
+        run: |
+          pwd
+          ls -l
+          cd android
+          ./download.sh 
+          ./buildall.sh --arch ${{ matrix.target }} mpv
+          cd ..
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: android/prefix/${{ matrix.target }}/lib/
+          name: mpv-android-${{ matrix.target }}
