@@ -61,7 +61,7 @@ jobs:
       - name: prepare dependencies
         run: |
           brew install yasm
-          brew uninstall brotli
+          brew uninstall --ignore-dependencies brotli
 
       - name: Check out code 
         uses: actions/checkout@v2
