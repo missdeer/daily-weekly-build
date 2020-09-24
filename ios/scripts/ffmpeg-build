@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 FFMPEG_OPTIONS="${COMMON_OPTIONS%% *} \
@@ -33,7 +33,9 @@ else
 	AS="gas-preprocessor.pl -- $CC"
 fi
 
-
+pwd
+ls -l .
+ls -l $SRC
 $SRC/FFmpeg*/configure $FFMPEG_OPTIONS \
 		--target-os=darwin \
 		--arch=$ARCH \
