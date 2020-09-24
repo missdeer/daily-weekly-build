@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-if [ ! -f $SRC/fribidi/configure ]; then
-cd $SRC/fribidi
+if [ ! -f $SRC/fribidi*/configure ]; then
+cd $SRC/fribidi*
 ./autogen.sh
 cd -
 fi

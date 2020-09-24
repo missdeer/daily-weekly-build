@@ -5,8 +5,8 @@ OPT="--disable-fontconfig \
 	--disable-require-system-font-provider \
 	--enable-directwrite"
 
-if [ ! -f $SRC/libass/configure ]; then
-cd $SRC/libass
+if [ ! -f $SRC/libass*/configure ]; then
+cd $SRC/libass*
 ./autogen.sh
 cd -
 fi
