@@ -60,7 +60,7 @@ jobs:
     steps:      
       - name: prepare dependencies
         run: |
-          brew install yasm
+          brew install yasm automake autoconf m4
           brew uninstall --ignore-dependencies brotli
 
       - name: Check out code 
