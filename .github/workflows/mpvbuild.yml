@@ -76,13 +76,11 @@ jobs:
           ./download.sh 
           ./build.sh -e ${{ matrix.target }}
           cd ..
-          mkdir binary
-          cp ios/lib/* binary/
 
       - name: upload artifact
         uses: actions/upload-artifact@v1
         with:
-          path: binary
+          path: ios/lib
           name: mpv-ios-${{ matrix.target }}
 
   Android:
