@@ -36,7 +36,7 @@ fi
 pwd
 ls -l .
 ls -l $SRC
-$SRC/FFmpeg*/configure $FFMPEG_OPTIONS \
+$SRC/ffmpeg*/configure $FFMPEG_OPTIONS \
 		--target-os=darwin \
 		--arch=$ARCH \
 		--cc="$CC" \

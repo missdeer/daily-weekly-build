@@ -17,9 +17,9 @@ MPV_URL="https://github.com/mpv-player/mpv/archive/master.tar.gz"
 curl -f -L $MPV_URL -o downloads/mpv.tar.gz
 tar xvf downloads/mpv.tar.gz -C src
 
-FFMPEG_URL="https://github.com/FFmpeg/FFmpeg/archive/master.tar.gz"
-curl -f -L $FFMPEG_URL -o downloads/FFmpeg.tar.gz
-tar xvf downloads/FFmpeg.tar.gz -C src
+FFMPEG_URL="http://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz"
+curl -f -L $FFMPEG_URL -o downloads/FFmpeg.tar.xz
+tar xvf downloads/FFmpeg.tar.xz -C src
 
 LIBASS_URL="https://github.com/libass/libass/archive/master.tar.gz"
 FRIBIDI_URL="https://github.com/fribidi/fribidi/releases/download/v$FRIBIDI_VERSION/fribidi-$FRIBIDI_VERSION.tar.xz"
