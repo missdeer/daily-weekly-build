@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Change to preferred versions
-MPV_VERSION="0.32.0"
+MPV_VERSION="0.33.0"
 FFMPEG_VERSION="4.3.1"
 LIBASS_VERSION="0.14.0"
 FREETYPE_VERSION="2.10.2"
@@ -13,7 +13,7 @@ rm -rf src
 mkdir src
 [ -d "downloads" ] || mkdir downloads;
 
-MPV_URL="https://github.com/mpv-player/mpv/archive/master.tar.gz"
+MPV_URL="https://github.com/mpv-player/mpv/archive/v$MPV_VERSION.tar.gz"
 curl -f -L $MPV_URL -o downloads/mpv.tar.gz
 tar xvf downloads/mpv.tar.gz -C src
 
