@@ -58,6 +58,10 @@ jobs:
       matrix:
         target: [distribution, development]
     steps:      
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '11.7'
+        
       - name: prepare dependencies
         run: |
           brew install yasm automake autoconf m4
