@@ -1,33 +1,25 @@
 #!/bin/bash -e
 
 # Change to preferred versions
-MPV_VERSION="0.33.0"
-FFMPEG_VERSION="4.3.1"
+MPV_VERSION="0.31.0"
+FFMPEG_VERSION="4.1"
 LIBASS_VERSION="0.14.0"
-FREETYPE_VERSION="2.10.2"
-HARFBUZZ_VERSION="2.6.7"
-FRIBIDI_VERSION="1.0.10"
-UCHARDET_VERSION="0.0.7"
-
-rm -rf src
-mkdir src
-[ -d "downloads" ] || mkdir downloads;
+FREETYPE_VERSION="2.10.0"
+HARFBUZZ_VERSION="2.6.4"
+FRIBIDI_VERSION="1.0.8"
+UCHARDET_VERSION="0.0.6"
 
 MPV_URL="https://github.com/mpv-player/mpv/archive/v$MPV_VERSION.tar.gz"
-curl -f -L $MPV_URL -o downloads/mpv.tar.gz
-tar xvf downloads/mpv.tar.gz -C src
-
-FFMPEG_URL="http://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz"
-curl -f -L $FFMPEG_URL -o downloads/FFmpeg.tar.xz
-tar xvf downloads/FFmpeg.tar.xz -C src
-
-LIBASS_URL="https://github.com/libass/libass/archive/master.tar.gz"
-FRIBIDI_URL="https://github.com/fribidi/fribidi/releases/download/v$FRIBIDI_VERSION/fribidi-$FRIBIDI_VERSION.tar.xz"
-FREETYPE_URL="https://sourceforge.net/projects/freetype/files/freetype2/$FREETYPE_VERSION/freetype-$FREETYPE_VERSION.tar.xz"
+FFMPEG_URL="http://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2"
+LIBASS_URL="https://github.com/libass/libass/releases/download/$LIBASS_VERSION/libass-$LIBASS_VERSION.tar.gz"
+FREETYPE_URL="https://sourceforge.net/projects/freetype/files/freetype2/$FREETYPE_VERSION/freetype-$FREETYPE_VERSION.tar.bz2"
 HARFBUZZ_URL="https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-$HARFBUZZ_VERSION.tar.xz"
+FRIBIDI_URL="https://github.com/fribidi/fribidi/releases/download/v$FRIBIDI_VERSION/fribidi-$FRIBIDI_VERSION.tar.bz2"
 UCHARDET_URL="https://www.freedesktop.org/software/uchardet/releases/uchardet-$UCHARDET_VERSION.tar.xz"
 
-for URL in $UCHARDET_URL $FREETYPE_URL $HARFBUZZ_URL $FRIBIDI_URL $LIBASS_URL; do
+rm -rf src
+mkdir -p src downloads
+for URL in $UCHARDET_URL $FREETYPE_URL $HARFBUZZ_URL $FRIBIDI_URL $LIBASS_URL $FFMPEG_URL $MPV_URL; do
 	TARNAME=${URL##*/}
     if [ ! -f "downloads/$TARNAME" ]; then
 	    curl -f -L $URL -o downloads/$TARNAME
