@@ -17,7 +17,7 @@ unset CC CXX # meson wants these unset
 
 meson $build \
 	--buildtype release --cross-file "$prefix_dir"/crossfile.txt \
-	--default-library static -Denable_tests=false
+	--default-library static -Denable_tests=false -Denable_avx512=false
 
 ninja -C $build -j$cores
 DESTDIR="$prefix_dir" ninja -C $build install
