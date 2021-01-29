@@ -47,17 +47,35 @@ loadarch () {
 	export prefix_dir="$PWD/prefix/$prefix_name"
 	if [ $clang -eq 1 ]; then
 		export CC=$cc_triple-clang
+		export CXX=$cc_triple-clang++
 	else
 		export CC=$cc_triple-gcc
+		export CXX=$cc_triple-g++
 	fi
 }
 
 setup_prefix () {
-	[ -d "$prefix_dir" ] && return 0
-	mkdir -p "$prefix_dir"
-	# enforce flat structure (/usr/local -> /)
-	ln -s . "$prefix_dir/usr"
-	ln -s . "$prefix_dir/local"
+	if [ ! -d "$prefix_dir" ]; then
+		mkdir -p "$prefix_dir"
+		# enforce flat structure (/usr/local -> /)
+		ln -s . "$prefix_dir/usr"
+		ln -s . "$prefix_dir/local"
+	fi
+
+	# meson wants to be spoonfed this file, so create it ahead of time
+	cat >"$prefix_dir/crossfile.txt" <<CROSSFILE
+[binaries]
+c = '$CC'
+cpp = '$CXX'
+ar = '$ndk_triple-ar'
+strip = '$ndk_triple-strip'
+pkgconfig = 'pkg-config'
+[host_machine]
+system = 'linux'
+cpu_family = '${ndk_triple%%-*}'
+cpu = '${CC%%-*}'
+endian = 'little'
+CROSSFILE
 }
 
 build () {
