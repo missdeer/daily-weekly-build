@@ -52,6 +52,15 @@ jobs:
           path: binary
           name: mpv-${{ matrix.target }}
 
+      - name: upload to own file server
+        run: |
+          cd binary
+          7z.exe a ../mpv-${{ matrix.target }}.zip *
+          cd ..
+          dir
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
+          
   iOS:
     runs-on: macos-latest
     strategy:
@@ -86,6 +95,14 @@ jobs:
           path: ios/lib
           name: mpv-ios-${{ matrix.target }}
 
+      - name: upload to own file server
+        run: |
+          cd ios
+          7z.exe a mpv-ios-${{ matrix.target }}.zip lib
+          dir
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-ios-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-ios-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
+          
   Android:
     runs-on: ubuntu-latest
     strategy:
@@ -115,3 +132,11 @@ jobs:
         with:
           path: android/prefix/${{ matrix.target }}/lib/
           name: mpv-android-${{ matrix.target }}
+
+      - name: upload to own file server
+        run: |
+          cd android/prefix/${{ matrix.target }}
+          7z.exe a mpv-android-${{ matrix.target }}.zip lib
+          dir
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
