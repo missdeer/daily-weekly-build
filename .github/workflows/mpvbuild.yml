@@ -57,7 +57,7 @@ jobs:
           cd binary
           7z a ../mpv-${{ matrix.target }}.zip *
           cd ..
-          dir
+          ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
           
@@ -99,7 +99,7 @@ jobs:
         run: |
           cd ios
           7z a mpv-ios-${{ matrix.target }}.zip lib
-          dir
+          ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-ios-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-ios-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
           
@@ -137,6 +137,6 @@ jobs:
         run: |
           cd android/prefix/${{ matrix.target }}
           7z a mpv-android-${{ matrix.target }}.zip lib
-          dir
+          ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER }}
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.zip" ${{ secrets.FILE_SERVER2 }}
