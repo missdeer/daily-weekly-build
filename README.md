@@ -1,13 +1,16 @@
-# mpv-build
+# daily-build
+## Clang for Windows
+## quiche
+## mpv-build
 
-## Windows
+### Windows
 
 https://github.com/mpv-player/mpv/blob/master/DOCS/compile-windows.md
 
-## iOS
+### iOS
 
 https://github.com/stps/mpv-ios-scripts
 
-## Android
+### Android
 
 https://github.com/mpv-android/mpv-android/tree/master/buildscripts

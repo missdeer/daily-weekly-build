@@ -1,0 +1,70 @@
+name: Clang for Windows
+on: 
+  schedule:
+    - cron:  '0 18 * * *'
+  push:
+    paths:
+      - '.github/workflows/clang-for-windows.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/clang-for-windows.yml'
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        msvc_arch: [x64, x86]
+    env:
+      targetName: llvm-win-${{ matrix.msvc_arch }}
+    steps:
+      - name: Checkout llvm-project
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          git clone --depth=1 https://github.com/llvm/llvm-project.git
+      - name: build-msvc
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          mkdir -p llvm-project\build
+          cd llvm-project\build
+          set CC=cl
+          set CXX=cl
+          cmake.exe -GNinja -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld" -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON ..\llvm
+          ninja
+          ninja install
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: llvm-project\build\llvm_win_bin\bin
+          name: llvm-win-${{ matrix.msvc_arch }}
+
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.15
+        id: go
+
+      - name: Build transfer command
+        run: |
+          git clone --depth=1 https://github.com/missdeer/transfer.git gopath
+          cd gopath
+          go build -ldflags="-s -w" -o bin\transfer.exe
+          cd ..
+          
+      - name: upload to own file server
+        shell: cmd
+        run: |
+          set TRANSFER=%CD%\gopath\bin\transfer.exe
+          cd llvm-project\build\llvm_win_bin\bin
+          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.7z *
+          cd ..
+          dir
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
+          echo %TRANSFER%
+          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}.7z
