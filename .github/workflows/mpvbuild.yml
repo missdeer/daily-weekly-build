@@ -5,9 +5,13 @@ on:
   push:
     paths:
       - '.github/workflows/mpvbuild.yml'
+      - 'ios/**'
+      - 'android/**'
   pull_request:
     paths:
       - '.github/workflows/mpvbuild.yml'
+      - 'ios/**'
+      - 'android/**'
 jobs:
   Windows:
     runs-on: ubuntu-latest
