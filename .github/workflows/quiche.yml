@@ -293,6 +293,7 @@ jobs:
           7z a quiche-${{ matrix.target }}.7z deps/libquiche.*
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@quiche-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
+          sudo sysctl -w net.core.rmem_max=2500000
           $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic quiche-${{ matrix.target }}.7z
 
   apps:
@@ -446,6 +447,7 @@ jobs:
           7z a nginx-ubuntu-amd64.7z nginx
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@nginx-ubuntu-amd64.7z" ${{ secrets.FILE_SERVER }}
+          sudo sysctl -w net.core.rmem_max=2500000
           $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic nginx-ubuntu-amd64.7z
           
   docker:
@@ -600,4 +602,5 @@ jobs:
           7z a quiche-${{ matrix.target }}.7z deps/libquiche.*
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@quiche-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
+          sudo sysctl -w net.core.rmem_max=2500000
           $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic quiche-${{ matrix.target }}.7z

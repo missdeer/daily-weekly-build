@@ -72,6 +72,7 @@ jobs:
           cd ..
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
+          sudo sysctl -w net.core.rmem_max=2500000
           $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
           
   iOS:
