@@ -1,15 +1,13 @@
 name: mpv-build
 on: 
   schedule:
-    - cron:  '0 17 * * *'
+    - cron:  '0 17 * * 2'
   push:
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
+    paths:
+      - '.github/workflows/mpvbuild.yml'
   pull_request:
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
+    paths:
+      - '.github/workflows/mpvbuild.yml'
 jobs:
   Windows:
     runs-on: ubuntu-latest
@@ -32,7 +30,7 @@ jobs:
           cd mxe
           echo "JOBS := 4" >> settings.mk
           echo "MXE_TARGETS := ${{ matrix.target }}" >> settings.mk
-          make gcc ffmpeg libass jpeg lua
+          make gcc ffmpeg libass jpeg lua `nproc`
           cd ..
       - name: checkout mpv
         run: |
