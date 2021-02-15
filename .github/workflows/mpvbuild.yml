@@ -14,37 +14,31 @@ on:
       - 'android/**'
 jobs:
   Windows:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
-        target: [x86_64-w64-mingw32.static, i686-w64-mingw32.static]
-    steps:
-      - name: cache mxe
-        id: cache-mxe
-        uses: actions/cache@v2
+        mingw_arch: [MINGW64, MINGW32]
+        include:
+          - mingw_arch: MINGW64
+            mingw_prefix: mingw-w64-x86_64
+          - mingw_arch: MINGW32
+            mingw_prefix: mingw-w64-i686
+    steps: 
+      - uses: msys2/setup-msys2@v2
         with:
-          path: mxe
-          key: ${{ matrix.target }}-mxe
-      - name: prepare mxe
-        if: steps.cache-mxe.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get update -qq ;
-          sudo apt-get install -qq autopoint gperf intltool libltdl-dev libtool-bin lzip p7zip-full;
-          git clone --depth=1 https://github.com/mxe/mxe mxe
-          cd mxe
-          echo "JOBS := 4" >> settings.mk
-          echo "MXE_TARGETS := ${{ matrix.target }}" >> settings.mk
-          make gcc ffmpeg libass jpeg lua `nproc`
-          cd ..
+          update: true
+          msystem: ${{ matrix.mingw_arch }}
+          install: python ${{ matrix.mingw_prefix }}-pkg-config ${{ matrix.mingw_prefix }}-python3 ${{ matrix.mingw_prefix }}-gcc ${{ matrix.mingw_prefix }}-ffmpeg ${{ matrix.mingw_prefix }}-libjpeg-turbo ${{ matrix.mingw_prefix }}-lua51
       - name: checkout mpv
         run: |
           git clone --depth=1 https://github.com/mpv-player/mpv.git
       - name: build mpv
+        shell: msys2 {0}
         run: |
           cd mpv
-          ./bootstrap.py
-          env PATH=$PWD/../mxe/usr/bin:$PATH DEST_OS=win32 TARGET=${{ matrix.target }} ./waf configure --enable-libmpv-shared 
-          env PATH=$PWD/../mxe/usr/bin:$PATH DEST_OS=win32 TARGET=${{ matrix.target }} ./waf build          
+          /${{ matrix.mingw_arch }}/bin/python3.exe ./bootstrap.py
+          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ./waf configure CC=gcc.exe --check-c-compiler=gcc --enable-libmpv-shared
+          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ./waf build      
           cd ..
           mkdir binary
           cp mpv/build/mpv* binary/
