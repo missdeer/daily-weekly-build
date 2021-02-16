@@ -59,7 +59,7 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
-          go build -ldflags="-s -w" -o bin/transfer
+          go build -ldflags="-s -w" -o bin\transfer.exe
           cd ..
 
       - name: upload to own file server
