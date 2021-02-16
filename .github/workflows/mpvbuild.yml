@@ -63,6 +63,7 @@ jobs:
           cd ..
 
       - name: upload to own file server
+        shell: cmd
         run: |
           export GOPATH=$PWD/gopath
           cd binary
