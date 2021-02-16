@@ -65,14 +65,13 @@ jobs:
       - name: upload to own file server
         shell: cmd
         run: |
-          export GOPATH=$PWD/gopath
+          set GOPATH=%CD%/gopath
           cd binary
           7z a ../mpv-${{ matrix.target }}.7z *
           cd ..
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
-          sudo sysctl -w net.core.rmem_max=2500000
-          $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
+          %GOPATH%/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
           
   iOS:
     runs-on: macos-latest
