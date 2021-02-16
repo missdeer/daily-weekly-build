@@ -65,13 +65,13 @@ jobs:
       - name: upload to own file server
         shell: cmd
         run: |
-          set GOPATH=%CD%/gopath
+          set GOPATH=%CD%\gopath
           cd binary
-          7z a ../mpv-${{ matrix.target }}.7z *
+          7z a ..\mpv-${{ matrix.target }}.7z *
           cd ..
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
-          %GOPATH%/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
+          %GOPATH%\bin\transfer.exe -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
           
   iOS:
     runs-on: macos-latest
