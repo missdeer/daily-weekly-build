@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           path: binary
-          name: mpv-${{ matrix.target }}
+          name: mpv-${{ matrix.mingw_prefix }}
 
       - name: Set up Go 1.15
         uses: actions/setup-go@v1
@@ -67,11 +67,11 @@ jobs:
         run: |
           set GOPATH=%CD%\gopath
           cd binary
-          7z a ..\mpv-${{ matrix.target }}.7z *
+          7z a ..\mpv-${{ matrix.mingw_prefix }}.7z *
           cd ..
           ls -l
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
-          %GOPATH%\bin\transfer.exe -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.target }}.7z
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.mingw_prefix }}.7z" ${{ secrets.FILE_SERVER }}
+          %GOPATH%\bin\transfer.exe -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.mingw_prefix }}.7z
           
   iOS:
     runs-on: macos-latest
