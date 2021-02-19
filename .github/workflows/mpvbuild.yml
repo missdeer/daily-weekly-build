@@ -42,6 +42,10 @@ jobs:
           cd ..
           mkdir binary
           cp mpv/build/mpv* binary/
+          export BINARY=$PWD/binary
+          cd /${{ matrix.mingw_arch }}/bin/
+          cp zlib1.dll xvidcore.dll swscale-5.dll swresample-3.dll sdl2.dll postproc-55.dll lua51.dll libzstd.dll libxml2-2.dll libx265.dll libx264-159.dll libwinpthread-1.dll libwebpmux-3.dll libwebp-7.dll libwavpack-1.dll libvulkan-1.dll libvorbisenc-2.dll libvorbis-0.dll libunistring-2.dll libtheoraenc-1.dll libtheoradec-1.dll libtasn1-6.dll libstdc++-6.dll libsrt.dll libspeex-1.dll librtmp-1.dll libpng16-16.dll libpcre-1.dll libp11-kit-0.dll libopus-0.dll libopenjp2-7.dll libopencore-amrwb-0.dll libopencore-amrnb-0.dll libopenal-1.dll libogg-0.dll libnettle-8.dll libmp3lame-0.dll libmodplug-1.dll libmfx-1.dll liblzma-5.dllliblz4.dll liblcms2-2.dll libjpeg-8.dll libintl-8.dll libidn2-0.dll libiconv-2.dll libhogweed-6.dll libharfbuzz-0.dll libgsm.dll libgraphite2.dll libgnutls-30.dll libgmp-10.dll libglib-2.0-0.dll libgcc_s_seh-1.dll libfribidi-0.dll libfreetype-6.dll libfontconfig-1.dll libffi-7.dll libexpat-1.dll libdav1d.dll libcrypto-1_1*.dll libcelt0-2.dll libcaca-0.dll libbz2-1.dll libbrotlidec.dll libbrotlicommon.dll libbluray-2.dll libass-9.dll libarchive-13.dll libaom.dll avutil-56.dll avformat-58.dll avfilter-7.dll avdevice-58.dll avcodec-58.dll $BINARY/
+          cd -
           
       - name: upload artifact
         uses: actions/upload-artifact@v1
