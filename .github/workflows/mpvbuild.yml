@@ -53,10 +53,10 @@ jobs:
           path: binary
           name: mpv-${{ matrix.mingw_prefix }}
 
-      - name: Set up Go 1.15
-        uses: actions/setup-go@v1
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v2
         with:
-          go-version: 1.15
+          go-version: 1.16
         id: go
 
       - name: Build transfer command
@@ -111,10 +111,10 @@ jobs:
           path: ios/lib
           name: mpv-ios-${{ matrix.target }}
 
-      - name: Set up Go 1.15
-        uses: actions/setup-go@v1
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v2
         with:
-          go-version: 1.15
+          go-version: 1.16
         id: go
 
       - name: Build transfer command
@@ -163,10 +163,10 @@ jobs:
           path: android/prefix/${{ matrix.target }}/lib/
           name: mpv-android-${{ matrix.target }}
 
-      - name: Set up Go 1.15
-        uses: actions/setup-go@v1
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v2
         with:
-          go-version: 1.15
+          go-version: 1.16
         id: go
 
       - name: Build transfer command
@@ -183,4 +183,5 @@ jobs:
           7z a mpv-android-${{ matrix.target }}.7z lib
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
+          sudo sysctl -w net.core.rmem_max=2500000
           $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-android-${{ matrix.target }}.7z
