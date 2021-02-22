@@ -1,7 +1,7 @@
 name: quiche
 on: 
   schedule:
-    - cron:  '0 17 * * 1'
+    - cron:  '0 17 * * *'
   push:
     paths:
       - '.github/workflows/quiche.yml'
