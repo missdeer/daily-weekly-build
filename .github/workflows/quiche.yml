@@ -140,7 +140,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --target=${{ matrix.target }} --verbose --release --all-features
+          args: --target=${{ matrix.target }} --verbose --release
 
       - name: Upload artifact quiche
         uses: actions/upload-artifact@v1.0.0
