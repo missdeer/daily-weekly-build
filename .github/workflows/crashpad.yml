@@ -36,7 +36,9 @@ jobs:
           mkdir crashpad
           cd crashpad
           fetch crashpad
+          dir && cd
           cd crashpad
+          dir && cd
           gn gen out\Default
           ninja -C out\Default
           cd ..
