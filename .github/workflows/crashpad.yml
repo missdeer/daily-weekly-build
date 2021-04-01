@@ -32,7 +32,8 @@ jobs:
         env:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
-          set PATH=%CD%\depot_tools
+          path
+          set PATH=%CD%\depot_tools;C:\Windows\system32
           mkdir crashpad
           cd crashpad
           path
