@@ -1,0 +1,55 @@
+name: crashpad
+on: 
+  schedule:
+    - cron:  '0 18 * * *'
+  push:
+    paths:
+      - '.github/workflows/crashpad.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/crashpad.yml'
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        msvc_arch: [x64, x86]
+    env:
+      targetName: crashpad-win-${{ matrix.msvc_arch }}
+    steps:
+      - name: Set up depot_tool
+        shell: cmd
+        run: |
+          mkdir depot_tools
+          cd depot_tools
+          curl.exe -O -sSL https://storage.googleapis.com/chrome-infra/depot_tools.zip
+          7z.exe x depot_tools.zip
+          cd ..
+
+      - name: Checkout crashpad
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          set PATH=%CD%\depot_tools;%PATH%
+          mkdir crashpad
+          cd crashpad
+          fetch crashpad
+          cd crashpad
+          gn gen out\Default
+          ninja -C out\Default
+          cd ..
+          cd ..
+          mkdir bin
+          pushd %CD%\crashpad\crashpad\out\Default
+          for /r %%a in (*.lib) do copy /y "%%a" "%CD%\bin\%%~nxa" 
+          for /r %%a in (*.dll) do copy /y "%%a" "%CD%\bin\%%~nxa" 
+          for /r %%a in (*.exe) do copy /y "%%a" "%CD%\bin\%%~nxa" 
+          popd
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: bin
+          name: crashpad-win-${{ matrix.msvc_arch }}
