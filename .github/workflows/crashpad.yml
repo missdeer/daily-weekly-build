@@ -32,11 +32,19 @@ jobs:
         env:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
-          set PATH=%CD%\depot_tools;%PATH%
+          set PATH=%CD%\depot_tools
           mkdir crashpad
           cd crashpad
           path
           fetch crashpad
+
+      - name: build crashpad
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          set PATH=%CD%\depot_tools;%PATH%
+          cd crashpad
           dir && cd
           cd crashpad
           dir && cd
