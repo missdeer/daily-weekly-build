@@ -38,7 +38,7 @@ jobs:
           path
           fetch crashpad
 
-      - name: build crashpad
+      - name: gn gen
         shell: cmd
         env:
           vc_arch: ${{ matrix.msvc_arch }}
@@ -50,6 +50,18 @@ jobs:
           cd crashpad
           dir && cd
           gn gen out\Default
+
+      - name: build crashpad
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          set PATH=%CD%\depot_tools;%PATH%
+          cd crashpad
+          dir && cd
+          cd crashpad
+          dir && cd
           ninja -C out\Default
           cd ..
           cd ..
