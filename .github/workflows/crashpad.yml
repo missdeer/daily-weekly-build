@@ -35,6 +35,7 @@ jobs:
           set PATH=%CD%\depot_tools;%PATH%
           mkdir crashpad
           cd crashpad
+          path
           fetch crashpad
           dir && cd
           cd crashpad
