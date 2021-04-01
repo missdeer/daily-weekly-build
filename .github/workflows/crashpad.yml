@@ -32,7 +32,6 @@ jobs:
         env:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
-          path
           set PATH=%CD%\depot_tools;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;
           mkdir crashpad
           cd crashpad
@@ -44,6 +43,7 @@ jobs:
         env:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
           set PATH=%CD%\depot_tools;%PATH%
           cd crashpad
           dir && cd
