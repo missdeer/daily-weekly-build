@@ -69,9 +69,10 @@ jobs:
         shell: cmd
         run: |
           mkdir google-crashpad\bin
-          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.lib) do copy "%%a" "%CD%\google-crashpad\bin\" 
           for /r %CD%\crashpad\crashpad\out\Default %%a in (*.dll) do copy "%%a" "%CD%\google-crashpad\bin\" 
           for /r %CD%\crashpad\crashpad\out\Default %%a in (*.exe) do copy "%%a" "%CD%\google-crashpad\bin\" 
+          mkdir google-crashpad\lib
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.lib) do copy "%%a" "%CD%\google-crashpad\lib\" 
           mkdir google-crashpad\include
           xcopy %CD%\crashpad\crashpad\*.h google-crashpad\include /y /s /f /i
 
