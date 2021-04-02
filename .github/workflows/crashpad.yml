@@ -96,7 +96,7 @@ jobs:
         shell: cmd
         run: |
           set TRANSFER=%CD%\gopath\bin\transfer.exe
-          7z.exe a ..\crashpad-win-${{ matrix.msvc_arch }}.7z bin
+          7z.exe a crashpad-win-${{ matrix.msvc_arch }}.7z bin
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@crashpad-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
           echo %TRANSFER%
