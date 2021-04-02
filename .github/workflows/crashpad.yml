@@ -56,7 +56,8 @@ jobs:
         env:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\
+          Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
           set PATH=%CD%\depot_tools;%PATH%
           cd crashpad
           dir && cd
@@ -66,14 +67,35 @@ jobs:
           cd ..
           cd ..
           mkdir bin
-          pushd %CD%\crashpad\crashpad\out\Default
-          for /r %%a in (*.lib) do copy /y "%%a" "%CD%\bin\%%~nxa" 
-          for /r %%a in (*.dll) do copy /y "%%a" "%CD%\bin\%%~nxa" 
-          for /r %%a in (*.exe) do copy /y "%%a" "%CD%\bin\%%~nxa" 
-          popd
+          for /r %CD%\crashpad\crashpad\out\Default %a in (*.lib) do copy /y "%a" "%CD%\bin\%~nxa" 
+          for /r %CD%\crashpad\crashpad\out\Default %a in (*.dll) do copy /y "%a" "%CD%\bin\%~nxa" 
+          for /r %CD%\crashpad\crashpad\out\Default %a in (*.exe) do copy /y "%a" "%CD%\bin\%~nxa" 
 
       - name: upload artifact
         uses: actions/upload-artifact@v1
         with:
           path: bin
           name: crashpad-win-${{ matrix.msvc_arch }}
+          
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.15
+        id: go
+
+      - name: Build transfer command
+        run: |
+          git clone --depth=1 https://github.com/missdeer/transfer.git gopath
+          cd gopath
+          go build -ldflags="-s -w" -o bin\transfer.exe
+          cd ..
+
+      - name: upload to own file server
+        shell: cmd
+        run: |
+          set TRANSFER=%CD%\gopath\bin\transfer.exe
+          7z.exe a ..\crashpad-win-${{ matrix.msvc_arch }}.7z bin
+          dir
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@crashpad-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
+          echo %TRANSFER%
+          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic crashpad-win-${{ matrix.msvc_arch }}.7z
