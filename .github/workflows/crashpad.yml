@@ -64,8 +64,10 @@ jobs:
           cd crashpad
           dir && cd
           ninja -C out\Default
-          cd ..
-          cd ..
+
+      - name: archive binaries
+        shell: cmd
+        run: |
           mkdir bin
           for /r %CD%\crashpad\crashpad\out\Default %a in (*.lib) do copy /y "%a" "%CD%\bin\" 
           for /r %CD%\crashpad\crashpad\out\Default %a in (*.dll) do copy /y "%a" "%CD%\bin\" 
