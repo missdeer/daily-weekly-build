@@ -65,18 +65,20 @@ jobs:
           dir && cd
           ninja -C out\Default
 
-      - name: archive binaries
+      - name: archive crashpad
         shell: cmd
         run: |
-          mkdir bin
-          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.lib) do copy "%%a" "%CD%\bin\" 
-          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.dll) do copy "%%a" "%CD%\bin\" 
-          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.exe) do copy "%%a" "%CD%\bin\" 
+          mkdir google-crashpad\bin
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.lib) do copy "%%a" "%CD%\google-crashpad\bin\" 
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.dll) do copy "%%a" "%CD%\google-crashpad\bin\" 
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.exe) do copy "%%a" "%CD%\google-crashpad\bin\" 
+          mkdir google-crashpad\include
+          xcopy %CD%\crashpad\crashpad\*.h google-crashpad\include /y /s /f /i
 
       - name: upload artifact
         uses: actions/upload-artifact@v1
         with:
-          path: bin
+          path: google-crashpad
           name: crashpad-win-${{ matrix.msvc_arch }}
           
       - name: Set up Go 1.15
@@ -96,7 +98,7 @@ jobs:
         shell: cmd
         run: |
           set TRANSFER=%CD%\gopath\bin\transfer.exe
-          7z.exe a crashpad-win-${{ matrix.msvc_arch }}.7z bin
+          7z.exe a crashpad-win-${{ matrix.msvc_arch }}.7z google-crashpad
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@crashpad-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
           echo %TRANSFER%
