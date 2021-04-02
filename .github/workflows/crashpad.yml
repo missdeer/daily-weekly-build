@@ -69,11 +69,9 @@ jobs:
         shell: cmd
         run: |
           mkdir bin
-          pushd %CD%\crashpad\crashpad\out\Default
-          for /r %a in (*.lib) do copy "%a" "%CD%\bin\" 
-          for /r %a in (*.dll) do copy "%a" "%CD%\bin\" 
-          for /r %a in (*.exe) do copy "%a" "%CD%\bin\" 
-          popd
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.lib) do copy "%%a" "%CD%\bin\" 
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.dll) do copy "%%a" "%CD%\bin\" 
+          for /r %CD%\crashpad\crashpad\out\Default %%a in (*.exe) do copy "%%a" "%CD%\bin\" 
 
       - name: upload artifact
         uses: actions/upload-artifact@v1
