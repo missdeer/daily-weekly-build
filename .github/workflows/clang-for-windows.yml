@@ -77,9 +77,9 @@ jobs:
         run: |
           set TRANSFER=%CD%\gopath\bin\transfer.exe
           cd llvm-project\build\llvm_win_bin\bin
-          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.7z *
+          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.zip *
           cd ..
           dir
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
           echo %TRANSFER%
-          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}.7z
+          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}.zip
