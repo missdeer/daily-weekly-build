@@ -3,7 +3,7 @@
 ## Dependency versions
 
 v_sdk=6609375_latest
-v_ndk=r22
+v_ndk=r22b
 v_sdk_build_tools=29.0.2
 
 v_lua=5.2.4
