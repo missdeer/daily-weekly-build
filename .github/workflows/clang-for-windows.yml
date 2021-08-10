@@ -16,10 +16,10 @@ jobs:
       matrix:
         include:
           - msvc_arch: x64
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/LLVM-12.0.0-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe
             compiler: clang-cl
           - msvc_arch: x86
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/LLVM-12.0.0-win32.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win32.exe
             compiler: clang-cl
     env:
       targetName: llvm-win-${{ matrix.msvc_arch }}
@@ -59,16 +59,17 @@ jobs:
           path: llvm-project\build\llvm_win_bin\bin
           name: llvm-win-${{ matrix.msvc_arch }}
 
-      - name: Set up Go 1.15
+      - name: Set up Go 1.16
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.16
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin\transfer.exe
           cd ..
           
