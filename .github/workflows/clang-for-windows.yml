@@ -53,11 +53,17 @@ jobs:
           ninja
           ninja install
 
-      - name: upload artifact
+      - name: upload executable artifact
         uses: actions/upload-artifact@v1
         with:
           path: llvm-project\build\llvm_win_bin\bin
           name: llvm-win-${{ matrix.msvc_arch }}
+
+      - name: upload devel artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: llvm-project\build\llvm_win_bin\
+          name: llvm-win-${{ matrix.msvc_arch }}-dev
 
       - name: Set up Go 1.16
         uses: actions/setup-go@v1
@@ -80,7 +86,10 @@ jobs:
           cd llvm-project\build\llvm_win_bin\bin
           7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.zip *
           cd ..
+          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.zip bin include lib libexec share
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.zip" ${{ secrets.FILE_SERVER }}
           echo %TRANSFER%
           "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}.zip
+          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}-dev.zip
