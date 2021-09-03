@@ -63,11 +63,16 @@ setup_prefix () {
 	fi
 
 	# meson wants to be spoonfed this file, so create it ahead of time
+	# also define: release build, static libs and no source downloads at runtime(!!!)
 	cat >"$prefix_dir/crossfile.txt" <<CROSSFILE
+[built-in options]
+buildtype = 'release'
+default_library = 'static'
+wrap_mode = 'nodownload'
 [binaries]
 c = '$CC'
 cpp = '$CXX'
-ar = '$ndk_triple-ar'
+ar = 'llvm-ar'
 strip = '$ndk_triple-strip'
 pkgconfig = 'pkg-config'
 [host_machine]
