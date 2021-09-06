@@ -462,69 +462,10 @@ jobs:
       - name: Build Docker images
         run: make docker-build
 
-  android_ndk_old:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ndk_version: ["r13b"]    
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          repository: 'cloudflare/quiche'
-          submodules: 'recursive'
-
-      - name: Install stable toolchain aarch64-linux-android
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ env.TOOLCHAIN }}
-          target: aarch64-linux-android
-          override: true
-
-      - name: Install stable toolchain arm-linux-androideabi
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ env.TOOLCHAIN }}
-          target: arm-linux-androideabi
-          override: true
-
-      - name: Install stable toolchain armv7-linux-androideabi
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ env.TOOLCHAIN }}
-          target: armv7-linux-androideabi
-          override: true
-
-      - name: Install stable toolchain i686-linux-android
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ env.TOOLCHAIN }}
-          target: i686-linux-android
-          override: true
-
-      - name: Download NDK
-        run: curl --http1.1 -O https://dl.google.com/android/repository/android-ndk-${{ matrix.ndk_version }}-linux-x86_64.zip
-
-      - name: Extract NDK
-        run: unzip -q android-ndk-${{ matrix.ndk_version }}-linux-x86_64.zip
-
-      - name: Run build
-        run: |
-          mkdir -p $TOOLCHAIN_DIR &&
-          tools/android/setup_android.sh &&
-          tools/android/build_android.sh --verbose --features ndk-old-gcc --release
-        env:
-          ANDROID_NDK_HOME: ${{ github.workspace }}/android-ndk-${{ matrix.ndk_version }}
-          TOOLCHAIN_DIR: ${{ github.workspace }}/toolchain
-
   android_ndk_lts:
     runs-on: ubuntu-latest
     env:
-      NDK_LTS_VER: "22"
+      NDK_LTS_VER: "23"
     strategy:
       matrix:
         target: ["aarch64-linux-android","armv7-linux-androideabi","x86_64-linux-android","i686-linux-android"]
