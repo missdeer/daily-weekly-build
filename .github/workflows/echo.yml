@@ -8,14 +8,14 @@ on:
       - '.github/workflows/echo.yml'
 
 jobs:
-  quiche:
+  echo:
     runs-on: ubuntu-latest    
     steps:
-      - run: echo ${{ secrets.FILE_SERVER }}
+      - run: a="${{ secrets.FILE_SERVER }}" && echo $a
       
-      - run: echo ${{ secrets.FILE_SERVER2 }}
+      - run: a="echo ${{ secrets.FILE_SERVER2 }}" && echo $a
       
-      - run: echo ${{ secrets.FILE_SERVER3 }}
+      - run: a="echo ${{ secrets.FILE_SERVER3 }}" && echo $a
       
-      - run: echo ${{ secrets.CLANG_SERVER }}
+      - run: a="echo ${{ secrets.CLANG_SERVER }}" && echo $a
       
