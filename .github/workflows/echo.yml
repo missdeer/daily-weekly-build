@@ -1,0 +1,21 @@
+name: echo
+on: 
+  push:
+    paths:
+      - '.github/workflows/echo.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/echo.yml'
+
+jobs:
+  quiche:
+    runs-on: ubuntu-latest    
+    steps:
+      - run: echo ${{ secrets.FILE_SERVER }}
+      
+      - run: echo ${{ secrets.FILE_SERVER2 }}
+      
+      - run: echo ${{ secrets.FILE_SERVER3 }}
+      
+      - run: echo ${{ secrets.CLANG_SERVER }}
+      
