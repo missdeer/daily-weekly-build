@@ -90,6 +90,3 @@ jobs:
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.zip" ${{ secrets.FILE_SERVER }}
-          echo %TRANSFER%
-          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}.zip
-          "%TRANSFER%" -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic llvm-win-${{ matrix.msvc_arch }}-dev.zip
