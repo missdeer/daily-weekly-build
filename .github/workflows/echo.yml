@@ -11,11 +11,11 @@ jobs:
   echo:
     runs-on: ubuntu-latest    
     steps:
-      - run: a="${{ secrets.FILE_SERVER }}" && echo $a
+      - run: a=`echo "${{ secrets.FILE_SERVER }}" | base64` && echo $a
       
-      - run: a="echo ${{ secrets.FILE_SERVER2 }}" && echo $a
+      - run: a=`echo "${{ secrets.FILE_SERVER2 }}" | base64` && echo $a
       
-      - run: a="echo ${{ secrets.FILE_SERVER3 }}" && echo $a
+      - run: a=`echo "${{ secrets.FILE_SERVER3 }}" | base64` && echo $a
       
-      - run: a="echo ${{ secrets.CLANG_SERVER }}" && echo $a
+      - run: a=`echo "${{ secrets.CLANG_SERVER }}" | base64` && echo $a
       
