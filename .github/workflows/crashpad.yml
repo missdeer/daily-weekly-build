@@ -82,16 +82,17 @@ jobs:
           path: google-crashpad
           name: crashpad-win-${{ matrix.msvc_arch }}
           
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin\transfer.exe
           cd ..
 

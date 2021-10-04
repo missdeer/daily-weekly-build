@@ -53,16 +53,17 @@ jobs:
           path: binary
           name: mpv-${{ matrix.mingw_prefix }}
 
-      - name: Set up Go 1.16
+      - name: Set up Go 
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin\transfer.exe
           cd ..
 
@@ -111,16 +112,17 @@ jobs:
           path: ios/lib
           name: mpv-ios-${{ matrix.target }}
 
-      - name: Set up Go 1.16
+      - name: Set up Go 1.17
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 
@@ -163,16 +165,17 @@ jobs:
           path: android/prefix/${{ matrix.target }}/lib/
           name: mpv-android-${{ matrix.target }}
 
-      - name: Set up Go 1.16
+      - name: Set up Go 1.17
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 

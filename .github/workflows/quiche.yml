@@ -93,16 +93,17 @@ jobs:
         run: |
           brew install p7zip
 
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 
@@ -152,16 +153,17 @@ jobs:
         run: |
           brew install p7zip
 
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 
@@ -211,16 +213,17 @@ jobs:
           name: quiche-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/deps/
 
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin\transfer.exe
           cd ..
           
@@ -273,16 +276,17 @@ jobs:
           sudo apt-get update -qq ;
           sudo apt-get install -qq p7zip-full;
           
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 
@@ -384,7 +388,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ["1.16.1"]    
+        version: ["1.17.1"]    
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -411,7 +415,7 @@ jobs:
       - name: Build NGINX
         run: |
           cd nginx-${{ matrix.version }} &&
-          patch -p01 < ../extras/nginx/nginx-1.16.patch &&
+          patch -p01 < ../extras/nginx/nginx-1.17.patch &&
           ./configure --with-cc-opt="-static -static-libgcc" --with-ld-opt=-static --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-openssl="../deps/boringssl" --with-quiche=".." &&
           make -j`nproc` &&
           objs/nginx -V
@@ -427,16 +431,17 @@ jobs:
           sudo apt-get update -qq ;
           sudo apt-get install -qq p7zip-full;
 
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
           
@@ -523,16 +528,17 @@ jobs:
           sudo apt-get update -qq ;
           sudo apt-get install -qq p7zip-full;
           
-      - name: Set up Go 1.15
+      - name: Set up Go 1.17
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: 1.17
         id: go
 
       - name: Build transfer command
         run: |
           git clone --depth=1 https://github.com/missdeer/transfer.git gopath
           cd gopath
+          go get
           go build -ldflags="-s -w" -o bin/transfer
           cd ..
 
