@@ -388,7 +388,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ["1.17.1"]    
+        version: ["1.16.1"]    
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
