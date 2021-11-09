@@ -16,10 +16,10 @@ jobs:
       matrix:
         include:
           - msvc_arch: x64
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/LLVM-13.0.0-win64.exe
             compiler: clang-cl
           - msvc_arch: x86
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win32.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/LLVM-13.0.0-win32.exe
             compiler: clang-cl
     env:
       targetName: llvm-win-${{ matrix.msvc_arch }}
@@ -49,7 +49,7 @@ jobs:
           cd llvm-project\build
           set CC=${{ matrix.compiler }}
           set CXX=${{ matrix.compiler }}
-          cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld" -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON ..\llvm
+          cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld" -DLLVM_TARGETS_TO_BUILD=X86;ARM;PowerPC;Mips;RISCV;WebAssembly -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON ..\llvm
           ninja
           ninja install
 
