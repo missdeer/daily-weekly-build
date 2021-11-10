@@ -52,6 +52,7 @@ jobs:
           cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld" -DLLVM_TARGETS_TO_BUILD=all -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON ..\llvm
           ninja
           ninja install
+          del /s /q *.obj
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
@@ -86,7 +87,9 @@ jobs:
           cd llvm-project\build\llvm_win_bin\bin
           7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.zip *
           cd ..
-          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.zip bin include lib libexec share
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
+          del /q llvm-win-${{ matrix.msvc_arch }}.zip
+          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.zip bin include lib libexec share
+          dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.zip" ${{ secrets.FILE_SERVER }}
