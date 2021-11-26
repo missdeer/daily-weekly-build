@@ -415,7 +415,7 @@ jobs:
       - name: Build NGINX
         run: |
           cd nginx-${{ matrix.version }} &&
-          patch -p01 < ../extras/nginx/nginx-1.17.patch &&
+          patch -p01 < ../extras/nginx/nginx-1.16.patch &&
           ./configure --with-cc-opt="-static -static-libgcc" --with-ld-opt=-static --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-openssl="../deps/boringssl" --with-quiche=".." &&
           make -j`nproc` &&
           objs/nginx -V
