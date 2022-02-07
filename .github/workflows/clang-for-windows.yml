@@ -16,10 +16,10 @@ jobs:
       matrix:
         include:
           - msvc_arch: x64
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1-rc3/LLVM-13.0.1-rc3-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/LLVM-13.0.1-win64.exe
             compiler: clang-cl
           - msvc_arch: x86
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1-rc3/LLVM-13.0.1-rc3-win32.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/LLVM-13.0.1-win32.exe
             compiler: clang-cl
     env:
       targetName: llvm-win-${{ matrix.msvc_arch }}
@@ -53,6 +53,8 @@ jobs:
           ninja
           ninja install
           del /s /q *.obj
+          del /s /q *.cpp
+          del /s /q *.cxx
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
