@@ -90,6 +90,7 @@ jobs:
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
           del /q llvm-win-${{ matrix.msvc_arch }}.zip
+          for /r %i (in *.obj) do del /q %i
           7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.zip bin include lib libexec share
           dir
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.zip" ${{ secrets.FILE_SERVER }}
