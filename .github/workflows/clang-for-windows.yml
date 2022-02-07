@@ -87,12 +87,11 @@ jobs:
         run: |
           set TRANSFER=%CD%\gopath\bin\transfer.exe
           cd llvm-project\build\llvm_win_bin\bin
-          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.zip *
+          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.7z *
           cd ..
           dir
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.zip" ${{ secrets.FILE_SERVER }}
-          del /q llvm-win-${{ matrix.msvc_arch }}.zip
-          for /r %i (in *.obj) do del /q %i
-          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.zip bin include lib libexec share
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
+          del /q llvm-win-${{ matrix.msvc_arch }}.7z
+          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.7z bin include lib libexec share
           dir
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.zip" ${{ secrets.FILE_SERVER }}
+          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.7z" ${{ secrets.FILE_SERVER }}
