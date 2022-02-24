@@ -1,0 +1,79 @@
+name: ipset
+on: 
+  schedule:
+    - cron:  '0 4 1 * *'
+  push:
+    paths:
+      - '.github/workflows/ipset.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/ipset.yml'
+
+      
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:          
+      - name: Generate ipset files
+        env:
+          MAXMIND_LICENSEKEY: ${{ secrets.MAXMIND_LICENSEKEY }}    
+        run: |
+          curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key=${MAXMIND_LICENSEKEY}&suffix=zip" -o GeoLite2-Country-CSV.zip
+          unzip GeoLite2-Country-CSV.zip
+          find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
+          cd GeoLite2-Country-CSV
+          n=`grep -r -a ',CN,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > cnroute.txt
+          n=`grep -r -a ',IT,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > itroute.txt
+          n=`grep -r -a ',US,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > usroute.txt
+          n=`grep -r -a ',JP,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > jproute.txt
+          n=`grep -r -a ',TW,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > twroute.txt
+          n=`grep -r -a ',HK,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > hkroute.txt
+          n=`grep -r -a ',SG,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sgroute.txt
+          n=`grep -r -a ',KR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > krroute.txt
+          n=`grep -r -a ',RU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ruroute.txt
+          n=`grep -r -a ',AS,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > asroute.txt
+          cat cnroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          cat jproute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          cat twroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          cat hkroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          cat krroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          cat sgroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
+          n=`grep -r -a ',EU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > euroute.txt
+          cat itroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
+          cat ruroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
+          n=`grep -r -a ',OC,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ocroute.txt
+          n=`grep -r -a ',AF,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > afroute.txt
+          n=`grep -r -a ',SA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > saroute.txt
+          n=`grep -r -a ',NA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > naroute.txt
+          cat usroute.txt | while read ip; do sed -i "\|$ip|d" naroute.txt; done
+          mkdir ../routes
+          mv *route.txt ../routes/
+          cd ../routes
+          find . -name '*route.txt' -type f | while read f; do basename=${f##*/}; basename=${basename%.txt}; sed -i "s|^|add $basename |" $f; done
+          
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}    
+        run: |    
+          cd routes  
+          git init
+          git add .
+          git config user.name "update-routes[bot]"
+          git config user.email "update-routes[bot]@users.noreply.github.com"
+          git commit -m "update routes at $(date)" .
+          git push --force --quiet https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git master:routes        
