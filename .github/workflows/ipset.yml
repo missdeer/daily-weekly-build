@@ -22,24 +22,23 @@ jobs:
           unzip GeoLite2-Country-CSV.zip
           find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
           cd GeoLite2-Country-CSV
-          n=`grep -r -a ',CN,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > cnroute.txt
+          curl -o cnroute.txt -L https://cdn.jsdelivr.net/gh/17mon/china_ip_list@master/china_ip_list.txt
           n=`grep -r -a ',IT,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > itroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > itroute.txt
           n=`grep -r -a ',US,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > usroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > usroute.txt
           n=`grep -r -a ',JP,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > jproute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > jproute.txt
           n=`grep -r -a ',TW,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > twroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > twroute.txt
           n=`grep -r -a ',HK,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > hkroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > hkroute.txt
           n=`grep -r -a ',SG,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sgroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sgroute.txt
           n=`grep -r -a ',KR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > krroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > krroute.txt
           n=`grep -r -a ',RU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $2=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ruroute.txt
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ruroute.txt
           n=`grep -r -a ',AS,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > asroute.txt
           cat cnroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
@@ -66,7 +65,7 @@ jobs:
           cd ../routes
           find . -name '*route.txt' -type f | while read f; do basename=${f##*/}; basename=${basename%.txt}; sed -i "s|^|add $basename |" $f; done
           
-      - name: Deploy to GitHub Pages
+      - name: Upload to GitHub Repository
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}    
         run: |    
