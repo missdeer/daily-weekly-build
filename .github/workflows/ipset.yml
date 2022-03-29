@@ -39,6 +39,8 @@ jobs:
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > krroute.txt
           n=`grep -r -a ',RU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ruroute.txt
+          n=`grep -r -a ',GB,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > gbroute.txt
           n=`grep -r -a ',AS,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > asroute.txt
           cat cnroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
@@ -51,6 +53,7 @@ jobs:
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > euroute.txt
           cat itroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
           cat ruroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
+          cat gbroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
           n=`grep -r -a ',OC,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
           cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ocroute.txt
           n=`grep -r -a ',AF,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
