@@ -22,6 +22,7 @@ if [[ "$ENVIRONMENT" = "development" ]]; then
 fi
 
 cd $SRC/mpv*
+curl -L https://github.com/mpv-player/mpv/raw/v0.32.0/wscript_build.py -O
 ./bootstrap.py
 ./waf configure $OPTS
-./waf build -j4
+./waf build -j `sysctl -n hw.logicalcpu`
