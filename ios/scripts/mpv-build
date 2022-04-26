@@ -22,7 +22,7 @@ if [[ "$ENVIRONMENT" = "development" ]]; then
 fi
 
 cd $SRC/mpv*
-curl -L https://raw.githubusercontent.com/missdeer/daily-weekly-build/master/ios/wscript_build.py -o wscript_build.py
+#curl -L https://raw.githubusercontent.com/missdeer/daily-weekly-build/master/ios/wscript_build.py -o wscript_build.py
 ./bootstrap.py
 ./waf configure $OPTS
 ./waf build -j `sysctl -n hw.logicalcpu`
