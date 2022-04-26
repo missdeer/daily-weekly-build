@@ -10,6 +10,7 @@ FFMPEG_OPTIONS="${COMMON_OPTIONS%% *} \
 		--disable-programs \
 		--disable-doc \
 		--enable-pic \
+        --disable-audiotoolbox \
 		--enable-shared"
 
 if [[ ! `which gas-preprocessor.pl` ]]; then
