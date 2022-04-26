@@ -2,6 +2,8 @@
 set -e
 
 $SRC/harfbuzz*/configure $COMMON_OPTIONS \
+                            --enable-static=yes \
+                            --with-brotli=no \
 							--with-icu=no \
 							--with-glib=no \
 							--with-fontconfig=no \
