@@ -25,7 +25,7 @@ case $OPTION in
 done
 
 export PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/:$PATH"
-DEPLOYMENT_TARGET="11.0"
+DEPLOYMENT_TARGET="13.0"
 
 if [[ "$ENVIRONMENT" = "distribution" ]]; then
     ARCHS="arm64"
