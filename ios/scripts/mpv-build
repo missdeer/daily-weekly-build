@@ -24,6 +24,10 @@ fi
 cd $SRC/mpv*
 curl -L https://raw.githubusercontent.com/missdeer/daily-weekly-build/master/ios/wscript_build.py -o wscript_build.py
 curl -L https://raw.githubusercontent.com/missdeer/daily-weekly-build/master/ios/wscript -o wscript
+chmod a+x wscript_build.py
+chmod a+x wscript
+pwd
+ls -l
 ./bootstrap.py
 ./waf configure $OPTS
 ./waf build -j `sysctl -n hw.logicalcpu`
