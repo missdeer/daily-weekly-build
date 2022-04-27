@@ -44,4 +44,4 @@ $SRC/ffmpeg*/configure $FFMPEG_OPTIONS \
 		--as="$AS" \
 		--extra-cflags="$CFLAGS"
 
-make -j4 install $EXPORT
+make -j `sysctl -n hw.logicalcpu` install $EXPORT
