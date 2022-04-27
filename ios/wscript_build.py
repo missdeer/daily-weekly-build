@@ -209,7 +209,7 @@ def build(ctx):
     ])
 
     subprocess_c = ctx.pick_first_matching_dep([
-        ( "osdep/subprocess-posix.c",            "posix && !tvos" ),
+        ( "osdep/subprocess-posix.c",            "fork" ),
         ( "osdep/subprocess-win.c",              "win32-desktop" ),
         ( "osdep/subprocess-dummy.c" ),
     ])
@@ -376,7 +376,6 @@ def build(ctx):
         ( "sub/dec_sub.c" ),
         ( "sub/draw_bmp.c" ),
         ( "sub/filter_regex.c",                  "posix" ),
-        ( "sub/filter_jsre.c",                   "javascript" ),
         ( "sub/filter_sdh.c" ),
         ( "sub/img_convert.c" ),
         ( "sub/lavc_conv.c" ),
@@ -507,7 +506,6 @@ def build(ctx):
         ( "video/out/vo_x11.c" ,                 "x11" ),
         ( "video/out/vo_xv.c",                   "xv" ),
         ( "video/out/vulkan/context.c",          "vulkan" ),
-        ( "video/out/vulkan/context_display.c",  "vulkan" ),
         ( "video/out/vulkan/context_android.c",  "vulkan && android" ),
         ( "video/out/vulkan/context_wayland.c",  "vulkan && wayland" ),
         ( "video/out/vulkan/context_win.c",      "vulkan && win32-desktop" ),
