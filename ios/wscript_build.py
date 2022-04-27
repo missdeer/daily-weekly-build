@@ -129,7 +129,7 @@ def build(ctx):
             target    = "generated/wayland/xdg-decoration-unstable-v1.h")
 
     ctx(features = "ebml_header", target = "generated/ebml_types.h")
-    ctx(features = "ebml_definitions", target = "generated/ebml_defs.c")
+    ctx(features = "ebml_definitions", target = "generated/ebml_defs.inc")
 
     def swift(task):
         src = [x.abspath() for x in task.inputs]
@@ -246,8 +246,10 @@ def build(ctx):
         ( "audio/out/ao_opensles.c",             "opensles" ),
         ( "audio/out/ao_oss.c",                  "oss-audio" ),
         ( "audio/out/ao_pcm.c" ),
+        ( "audio/out/ao_pipewire.c",             "pipewire" ),
         ( "audio/out/ao_pulse.c",                "pulse" ),
         ( "audio/out/ao_sdl.c",                  "sdl2-audio" ),
+        ( "audio/out/ao_sndio.c",                "sndio" ),
         ( "audio/out/ao_wasapi.c",               "wasapi" ),
         ( "audio/out/ao_wasapi_changenotify.c",  "wasapi" ),
         ( "audio/out/ao_wasapi_utils.c",         "wasapi" ),
@@ -376,6 +378,7 @@ def build(ctx):
         ( "sub/dec_sub.c" ),
         ( "sub/draw_bmp.c" ),
         ( "sub/filter_regex.c",                  "posix" ),
+        ( "sub/filter_jsre.c",                   "javascript" ),
         ( "sub/filter_sdh.c" ),
         ( "sub/img_convert.c" ),
         ( "sub/lavc_conv.c" ),
@@ -450,12 +453,13 @@ def build(ctx):
         ( "video/out/gpu/utils.c" ),
         ( "video/out/gpu/video.c" ),
         ( "video/out/gpu/video_shaders.c" ),
+        ( "video/out/gpu_next/context.c",        "libplacebo-next" ),
         ( "video/out/hwdec/hwdec_cuda.c",        "cuda-interop" ),
         ( "video/out/hwdec/hwdec_cuda_gl.c",     "cuda-interop && gl" ),
         ( "video/out/hwdec/hwdec_cuda_vk.c",     "cuda-interop && vulkan" ),
-        ( "video/out/hwdec/hwdec_vaapi.c",       "vaapi-egl || vaapi-vulkan" ),
+        ( "video/out/hwdec/hwdec_vaapi.c",       "vaapi-egl || vaapi-libplacebo" ),
         ( "video/out/hwdec/hwdec_vaapi_gl.c",    "vaapi-egl" ),
-        ( "video/out/hwdec/hwdec_vaapi_vk.c",    "vaapi-vulkan" ),
+        ( "video/out/hwdec/hwdec_vaapi_pl.c",    "vaapi-libplacebo" ),
         ( "video/out/libmpv_sw.c" ),
         ( "video/out/placebo/ra_pl.c",           "libplacebo" ),
         ( "video/out/placebo/utils.c",           "libplacebo" ),
@@ -491,6 +495,7 @@ def build(ctx):
         ( "video/out/vo_direct3d.c",             "direct3d" ),
         ( "video/out/vo_drm.c",                  "drm" ),
         ( "video/out/vo_gpu.c" ),
+        ( "video/out/vo_gpu_next.c",             "libplacebo-next" ),
         ( "video/out/vo_image.c" ),
         ( "video/out/vo_lavc.c" ),
         ( "video/out/vo_libmpv.c" ),
@@ -506,6 +511,7 @@ def build(ctx):
         ( "video/out/vo_x11.c" ,                 "x11" ),
         ( "video/out/vo_xv.c",                   "xv" ),
         ( "video/out/vulkan/context.c",          "vulkan" ),
+        ( "video/out/vulkan/context_display.c",  "vulkan" ),
         ( "video/out/vulkan/context_android.c",  "vulkan && android" ),
         ( "video/out/vulkan/context_wayland.c",  "vulkan && wayland" ),
         ( "video/out/vulkan/context_win.c",      "vulkan && win32-desktop" ),
@@ -707,7 +713,7 @@ def build(ctx):
             PRIV_LIBS    = get_deps(),
         )
 
-        headers = ["client.h", "opengl_cb.h", "render.h",
+        headers = ["client.h", "render.h",
                    "render_gl.h", "stream_cb.h"]
         for f in headers:
             ctx.install_as(ctx.env.INCLUDEDIR + '/mpv/' + f, 'libmpv/' + f)
