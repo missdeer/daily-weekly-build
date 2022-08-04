@@ -33,9 +33,6 @@ jobs:
         shell: cmd
         run: |
           git clone --depth=1 --single-branch --branch main https://github.com/llvm/llvm-project.git
-          cd llvm-project
-          curl -sL -o clang4win.patch https://github.com/missdeer/daily-weekly-build/raw/master/clang4win.patch
-          git apply clang4win.patch
 
       - name: build-msvc
         shell: cmd
