@@ -55,8 +55,8 @@ jobs:
           vc_arch: ${{ matrix.msvc_arch }}
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
-          call "C:\Program Files (x86)\Intel\oneAPI\compiler\2022.0.3\env\vars.bat"
-          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.0.3\windows\bin-llvm\";%PATH%
+          call "C:\Program Files (x86)\Intel\oneAPI\compiler\2022.1.0\env\vars.bat"
+          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.1.0\windows\bin-llvm\";%PATH%
           dir
           mkdir llvm-project\build
           dir llvm-project
