@@ -56,12 +56,12 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
           call "C:\Program Files (x86)\Intel\oneAPI\compiler\2022.0.3\env\vars.bat"
-          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.0.3\windows\bin-llvm\";%CD%\llvm\bin;%PATH%
-          mkdir -p llvm-project\build
+          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.0.3\windows\bin-llvm\";%PATH%
+          dir
+          mkdir llvm-project\build
+          dir llvm-project
           cd llvm-project\build
-          set CC=${{ matrix.compiler }}
-          set CXX=${{ matrix.compiler }}
-          cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;openmp" -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON ..\llvm
+          cmake.exe -GNinja -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icx -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;openmp" -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON ..\llvm
           ninja
           ninja install
           del /s /q *.obj
