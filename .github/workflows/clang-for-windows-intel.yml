@@ -56,8 +56,8 @@ jobs:
         run: |
           dir "C:\Program Files (x86)\Intel\oneAPI\compiler"
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
-          call "C:\Program Files (x86)\Intel\oneAPI\compiler\2022.3.0\env\vars.bat"
-          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.3.0\windows\bin-llvm\";%PATH%
+          call "C:\Program Files (x86)\Intel\oneAPI\compiler\2022.2.0\env\vars.bat"
+          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\2022.2.0\windows\bin-llvm\";%PATH%
           dir
           mkdir llvm-project\build
           dir llvm-project
