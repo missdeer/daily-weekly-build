@@ -6,6 +6,6 @@ PREFIX="${PREFIX##*=}"
 
 UCHARDET_OPTIONS="-DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_SHARED_LIBS=false -DCMAKE_OSX_SYSROOT=$SDKPATH"
 
-cmake $SRC/uchardet*
+#cmake $SRC/uchardet*
 cmake $SRC/uchardet* $UCHARDET_OPTIONS && make
 make install
