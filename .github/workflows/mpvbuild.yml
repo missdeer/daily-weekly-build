@@ -108,14 +108,10 @@ jobs:
     strategy:
       matrix:
         target: [distribution, development]
-    steps:      
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: "11.7"
-        
+    steps:              
       - name: prepare dependencies
         run: |
-          brew install yasm automake autoconf m4 p7zip
+          brew install yasm automake autoconf m4 p7zip meson
 
       - name: Check out code 
         uses: actions/checkout@v2
