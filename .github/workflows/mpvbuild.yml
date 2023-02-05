@@ -26,6 +26,14 @@ jobs:
             c: gcc
             cxx: g++
             mingw_prefix: mingw-w64-i686
+          - mingw_arch: CLANG64
+            c: clang
+            cxx: clang++
+            mingw_prefix: mingw-w64-clang-x86_64
+          - mingw_arch: CLANG32
+            c: clang
+            cxx: clang++
+            mingw_prefix: mingw-w64-clang-i686
     steps: 
       - uses: msys2/setup-msys2@v2
         with:
@@ -55,7 +63,7 @@ jobs:
         run: |
           cd mpv
           /${{ matrix.mingw_arch }}/bin/python3.exe ./bootstrap.py
-          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ./waf configure CC=gcc.exe --check-c-compiler=gcc --enable-libmpv-shared
+          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ./waf configure CC=${{ matrix.c }}.exe --check-c-compiler=${{ matrix.c }} --enable-libmpv-shared
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ./waf build      
           cd ..
           mkdir binary
