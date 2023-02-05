@@ -17,12 +17,11 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        mingw_arch: [MINGW64, MINGW32]
         include:
-          - mingw_arch: MINGW64
+          - mingw_arch: UCRT64
             c: gcc
             cxx: g++
-            mingw_prefix: mingw-w64-x86_64
+            mingw_prefix: mingw-w64-ucrt-x86_64
           - mingw_arch: MINGW32
             c: gcc
             cxx: g++
