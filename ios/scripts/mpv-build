@@ -28,6 +28,9 @@ cd $SRC/mpv*
 #chmod a+x wscript
 pwd
 ls -l
+#curl -O -L https://github.com/mesonbuild/meson/raw/master/cross/iphone.txt
+#meson setup --cross-file iphone.txt --default-library static -Diconv=disabled -Dlua=disabled -Dlibmpv=false -Dcplayer=false build
+#meson compile -C build
 ./bootstrap.py
 ./waf configure $OPTS
 ./waf build -j `sysctl -n hw.logicalcpu`
