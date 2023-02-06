@@ -67,8 +67,9 @@ jobs:
           cd ..
           mkdir binary
           cp mpv/build/mpv.exe binary/
-          cp mpv/build/libmpv.dll.a binary/
-          cp mpv/build/libmpv*.dll binary/
+          cp mpv/build/mpv.com binary/
+          cp mpv/build/*mpv.dll.a binary/
+          cp mpv/build/*mpv*.dll binary/
           export BINARY=$PWD/binary
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe $PWD/binary/mpv.exe
           find $PWD/binary -name '*mpv*.dll' -type f -exec env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe {} \;
