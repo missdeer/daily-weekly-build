@@ -1,20 +1,20 @@
-name: ipset
+name: cidr
 on: 
   schedule:
     - cron:  '0 4 15 * *'
   push:
     paths:
-      - '.github/workflows/ipset.yml'
+      - '.github/workflows/cidr.yml'
   pull_request:
     paths:
-      - '.github/workflows/ipset.yml'
+      - '.github/workflows/cidr.yml'
 
       
 jobs:
   route:
     runs-on: ubuntu-latest
     steps:          
-      - name: Generate ipset files
+      - name: Generate cidr files
         env:
           MAXMIND_LICENSEKEY: ${{ secrets.MAXMIND_LICENSEKEY }}    
         run: |
