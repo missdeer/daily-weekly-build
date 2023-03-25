@@ -1,0 +1,95 @@
+name: ipset
+on: 
+  schedule:
+    - cron:  '0 4 15 * *'
+  push:
+    paths:
+      - '.github/workflows/ipset.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/ipset.yml'
+
+      
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:          
+      - name: Generate ipset files
+        env:
+          MAXMIND_LICENSEKEY: ${{ secrets.MAXMIND_LICENSEKEY }}    
+        run: |
+          curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key=${MAXMIND_LICENSEKEY}&suffix=zip" -o GeoLite2-Country-CSV.zip
+          unzip GeoLite2-Country-CSV.zip
+          find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
+          cd GeoLite2-Country-CSV
+          curl -o cn_cidr.txt -L https://cdn.jsdelivr.net/gh/17mon/china_ip_list@master/china_ip_list.txt
+          n=`grep -r -a ',IT,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > it_cidr.txt
+          n=`grep -r -a ',US,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > us_cidr.txt
+          n=`grep -r -a ',JP,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > jp_cidr.txt
+          n=`grep -r -a ',TW,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > tw_cidr.txt
+          n=`grep -r -a ',HK,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > hk_cidr.txt
+          n=`grep -r -a ',SG,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sg_cidr.txt
+          n=`grep -r -a ',KR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > kr_cidr.txt
+          n=`grep -r -a ',RU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ru_cidr.txt
+          n=`grep -r -a ',GB,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > gb_cidr.txt
+          n=`grep -r -a ',FR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > fr_cidr.txt
+          n=`grep -r -a ',DE,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > de_cidr.txt
+          n=`grep -r -a ',SE,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > se_cidr.txt
+          n=`grep -r -a ',ES,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > es_cidr.txt
+          n=`grep -r -a ',NL,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > nl_cidr.txt
+          n=`grep -r -a ',AS,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > as_cidr.txt
+          cat cn_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          cat jp_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          cat tw_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          cat hk_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          cat kr_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          cat sg_cidr.txt | while read ip; do sed -i "\|$ip|d" as_cidr.txt; done
+          n=`grep -r -a ',EU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > eu_cidr.txt
+          cat it_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat ru_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat gb_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat fr_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat nl_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat se_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat es_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          cat de_cidr.txt | while read ip; do sed -i "\|$ip|d" eu_cidr.txt; done
+          n=`grep -r -a ',OC,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > oc_cidr.txt
+          n=`grep -r -a ',AF,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > af_cidr.txt
+          n=`grep -r -a ',SA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sa_cidr.txt
+          n=`grep -r -a ',NA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
+          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > na_cidr.txt
+          cat us_cidr.txt | while read ip; do sed -i "\|$ip|d" na_cidr.txt; done
+          mkdir ../cidrs
+          mv *_cidr.txt ../cidrs/
+          cd ../cidrs
+          
+      - name: Upload to GitHub Repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}    
+        run: |    
+          cd cidrs  
+          git init
+          git add .
+          git config user.name "update-cidrs[bot]"
+          git config user.email "update-cidrs[bot]@users.noreply.github.com"
+          git commit -m "update cidrs at $(date)" .
+          git push --force --quiet https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git master:cidr
