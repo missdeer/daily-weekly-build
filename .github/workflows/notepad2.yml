@@ -1,0 +1,101 @@
+name: notepad2
+on: 
+  schedule:
+    - cron:  '0 23 * * *'
+  push:
+    paths:
+      - '.github/workflows/notepad2.yml'
+      - 'notepad2/CMakeLists.txt'
+  pull_request:
+    paths:
+      - '.github/workflows/notepad2.yml'
+      - 'notepad2/CMakeLists.txt'
+      
+env:
+  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/19078/w_BaseKit_p_2023.0.0.25940_offline.exe
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/19085/w_HPCKit_p_2023.0.0.25931_offline.exe
+  WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-compiler
+  WINDOWS_DPCPP_COMPONENTS: intel.oneapi.win.dpcpp-compiler
+  COMPILER_VERSION: 2023.0.0
+            
+jobs:
+  clang-for-windows-bootstrap:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        toolset: [cl, icx, clang-cl]
+        msvc_arch: [x64]
+        include:
+          - toolset: cl
+          - toolset: icx
+          - toolset: clang-cl
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/LLVM-15.0.7-win64.exe
+    env:
+      targetName: notepad2-${{ matrix.toolset }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          submodules: true
+      
+      - name: Set up clang for Windows
+        if: matrix.toolset == 'clang-cl'
+        shell: cmd
+        run: |
+          mkdir llvm
+          cd llvm
+          curl.exe -o LLVM.exe -L ${{ matrix.clang_link }}
+          7z.exe x LLVM.exe
+          cd ..
+
+      - name: cache intel install
+        if: matrix.toolset == 'icx'
+        id: cache-install
+        uses: actions/cache@v2
+        with:
+          path: |
+              C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
+              C:\Program Files (x86)\Intel\oneAPI\compiler
+          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-compiler-${{ hashFiles('**/scripts/cache_exclude_windows.sh') }}
+
+      - name: install intel
+        if: steps.cache-install.outputs.cache-hit != 'true' && matrix.toolset == 'icx'
+        run: |
+          git clone --depth=1 https://github.com/oneapi-src/oneapi-ci.git oneapi-ci
+          cd oneapi-ci
+          scripts/install_windows.bat ${{ env.WINDOWS_HPCKIT_URL }} ${{ env.WINDOWS_CPP_COMPONENTS }}
+
+      - name: restore registry on cache hit
+        if: steps.cache-install.outputs.cache-hit == 'true' && matrix.toolset == 'icx'
+        run:  |
+          git clone --depth=1 https://github.com/oneapi-src/oneapi-ci.git oneapi-ci
+          cd oneapi-ci
+          scripts/restore_registry.bat ${{ env.COMPILER_VERSION }}
+
+      - name: build
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          call "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\env\vars.bat"
+          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\bin-llvm\";%CD%\llvm\bin;%PATH%
+          git clone --recursive https://github.com/zufuliu/notepad2.git
+          copy CMakeLists.txt notepad2\
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad2 -B cmake-build
+          cmake --build cmake-build --parallel
+          mkdir bin
+          copy cmake-build\notepad2.exe bin\
+          cd ..
+          
+      - name: copy libmmd.dll
+        if: matrix.toolset == 'icx'
+        run: |
+          copy "C:\Program Files (x86)\Intel\oneAPI\compiler\latest\windows\redist\intel64_win\compiler\libmmd.dll" bin\
+          
+      - name: upload executable artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: bin
+          name: notepad-${{ matrix.toolset }}
+
