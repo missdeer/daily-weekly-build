@@ -19,7 +19,7 @@ env:
   COMPILER_VERSION: 2023.1.0
             
 jobs:
-  notepad2-nightly:
+  notepad2-nightly-msvc:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -99,3 +99,78 @@ jobs:
           path: bin
           name: notepad2-${{ matrix.toolset }}
 
+  notepad2-nightly-mingw:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - mingw_arch: UCRT64
+            mingw_prefix: mingw-w64-ucrt-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            cmake_prefix_path: /ucrt64
+            stdlib: /ucrt64/bin/libstdc++-6.dll
+          - mingw_arch: CLANG64 
+            mingw_prefix: mingw-w64-clang-x86_64
+            toolchains: clang
+            c: clang
+            cxx: clang++
+            cmake_prefix_path: /clang64
+            stdlib: /clang64/bin/libc++.dll
+          - mingw_arch: MINGW64
+            mingw_prefix: mingw-w64-mingw-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            cmake_prefix_path: /mingw64
+            stdlib: /mingw64/bin/libstdc++-6.dll
+          - mingw_arch: CLANG32
+            mingw_prefix: mingw-w64-clang-i686
+            toolchains: clang
+            c: clang
+            cxx: clang++
+            cmake_prefix_path: /clang32
+            stdlib: /clang32/bin/libc++.dll
+          - mingw_arch: MINGW32
+            mingw_prefix: mingw-w64-mingw-i686
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            cmake_prefix_path: /mingw32
+            stdlib: /mingw32/bin/libstdc++-6.dll
+    env:
+      targetName: notepad2
+      
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{ matrix.mingw_arch }}
+          install:  ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2 
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 1
+          submodules: true
+          
+      - name: build
+        shell: cmd
+        run: |
+          git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
+          cd notepad2-src
+          git apply ..\notepad2\mingw.patch
+                    
+      - name: build
+        shell: msys2 {0}
+        run: |
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S . -B ${{ matrix.mingw_prefix }}-build
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake --build ${{ matrix.mingw_prefix }}-build --parallel --verbose
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.stdlib }} ${{ matrix.mingw_prefix }}-build/
+          
+      - name: upload executable artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: ${{ matrix.mingw_prefix }}-build
+          name: notepad2-${{ matrix.mingw_prefix }}
