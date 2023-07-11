@@ -5,11 +5,11 @@ on:
   push:
     paths:
       - '.github/workflows/notepad2.yml'
-      - 'notepad2/CMakeLists.txt'
+      - 'notepad2/**'
   pull_request:
     paths:
       - '.github/workflows/notepad2.yml'
-      - 'notepad2/CMakeLists.txt'
+      - 'notepad2/**'
       
 env:
   WINDOWS_BASEKIT_URL: https:/registrationcenter-download.intel.com/akdlm/IRC_NAS/c961e083-5685-4f0b-ada5-c6cf16f561dd/w_BaseKit_p_2023.1.0.47256_offline.exe
