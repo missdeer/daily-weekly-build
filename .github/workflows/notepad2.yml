@@ -83,7 +83,7 @@ jobs:
           git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
           copy notepad2\CMakeLists.txt notepad2-src\
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad2-src -B cmake-build
-          cmake --build cmake-build --parallel
+          cmake --build cmake-build --parallel --verbose
           mkdir bin
           copy cmake-build\notepad2.exe bin\
           cd ..
@@ -154,10 +154,12 @@ jobs:
         run: |
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S notepad2-src -B ${{ matrix.mingw_prefix }}-build
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake --build ${{ matrix.mingw_prefix }}-build --parallel --verbose
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.stdlib }} ${{ matrix.mingw_prefix }}-build/
+          mkdir bin
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/notepad2.exe bin/
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.stdlib }} bin/
           
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
         with:
-          path: ${{ matrix.mingw_prefix }}-build
+          path: bin
           name: notepad2-${{ matrix.mingw_prefix }}
