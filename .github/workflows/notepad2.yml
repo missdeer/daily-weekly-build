@@ -97,5 +97,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           path: bin
-          name: notepad-${{ matrix.toolset }}
+          name: notepad2-${{ matrix.toolset }}
 
