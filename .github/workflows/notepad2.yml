@@ -125,20 +125,6 @@ jobs:
             cxx: g++
             cmake_prefix_path: /mingw64
             stdlib: /mingw64/bin/libstdc++-6.dll
-          - mingw_arch: CLANG32
-            mingw_prefix: mingw-w64-clang-i686
-            toolchains: clang
-            c: clang
-            cxx: clang++
-            cmake_prefix_path: /clang32
-            stdlib: /clang32/bin/libc++.dll
-          - mingw_arch: MINGW32
-            mingw_prefix: mingw-w64-i686
-            toolchains: gcc
-            c: gcc
-            cxx: g++
-            cmake_prefix_path: /mingw32
-            stdlib: /mingw32/bin/libstdc++-6.dll
     env:
       targetName: notepad2
       
