@@ -155,7 +155,7 @@ jobs:
           fetch-depth: 1
           submodules: true
           
-      - name: build
+      - name: prepare
         shell: cmd
         run: |
           git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
@@ -166,7 +166,7 @@ jobs:
       - name: build
         shell: msys2 {0}
         run: |
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S . -B ${{ matrix.mingw_prefix }}-build
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S notepad2-src -B ${{ matrix.mingw_prefix }}-build
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake --build ${{ matrix.mingw_prefix }}-build --parallel --verbose
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.stdlib }} ${{ matrix.mingw_prefix }}-build/
           
