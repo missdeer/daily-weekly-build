@@ -19,7 +19,7 @@ env:
   COMPILER_VERSION: 2023.1.0
             
 jobs:
-  clang-for-windows-bootstrap:
+  notepad2-nightly:
     runs-on: windows-latest
     strategy:
       matrix:
