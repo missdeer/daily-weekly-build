@@ -68,7 +68,6 @@ file(GLOB
 file(GLOB
         win32
         scintilla/win32/*.cxx
-        scintilla/win32/*.c
         )
 
 set (CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO )
