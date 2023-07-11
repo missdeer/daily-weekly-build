@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "IntelLLVM")
-    add_compile_options("/QxCORE-AVX2" "-O3" "-mavx2" "-ipo" "-fp-model" "fast=2")
+    add_compile_options("/QxCORE-AVX2" "-O3" "-mavx2")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     add_compile_options("-mavx2" "-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
