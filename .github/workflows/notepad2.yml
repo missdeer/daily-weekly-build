@@ -119,7 +119,7 @@ jobs:
             cmake_prefix_path: /clang64
             stdlib: /clang64/bin/libc++.dll
           - mingw_arch: MINGW64
-            mingw_prefix: mingw-w64-mingw-x86_64
+            mingw_prefix: mingw-w64-x86_64
             toolchains: gcc
             c: gcc
             cxx: g++
@@ -133,7 +133,7 @@ jobs:
             cmake_prefix_path: /clang32
             stdlib: /clang32/bin/libc++.dll
           - mingw_arch: MINGW32
-            mingw_prefix: mingw-w64-mingw-i686
+            mingw_prefix: mingw-w64-i686
             toolchains: gcc
             c: gcc
             cxx: g++
