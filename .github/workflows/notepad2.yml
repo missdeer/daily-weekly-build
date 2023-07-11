@@ -80,9 +80,9 @@ jobs:
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
           call "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\env\vars.bat"
           set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\bin-llvm\";%CD%\llvm\bin;%PATH%
-          git clone --recursive https://github.com/zufuliu/notepad2.git
-          copy CMakeLists.txt notepad2\
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad2 -B cmake-build
+          git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
+          copy notepad2\CMakeLists.txt notepad2-src\
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad2-src -B cmake-build
           cmake --build cmake-build --parallel
           mkdir bin
           copy cmake-build\notepad2.exe bin\
