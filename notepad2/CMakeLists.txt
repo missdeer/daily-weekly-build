@@ -7,14 +7,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "IntelLLVM")
-    add_compile_options("/QxCORE-AVX2" "-O3" "-mavx2")
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    add_compile_options("-mavx2" "-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe")
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    add_compile_options("-mavx2" "-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe")
-else()
-    add_compile_options("/Ot" "/fp:fast" "/Gv" "/arch:AVX2")
+option(NOAVX2 "Target CPU does NOT support AVX2")
+
+if(NOT NOAVX2 AND NOT CMAKE_BUILD_TYPE MATCHES Debug)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "IntelLLVM")
+            add_compile_options("/QxCORE-AVX2" "-O3" "-mavx2")
+        elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+            add_compile_options("-O3" "-mavx2" "-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe")
+        elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+            add_compile_options( "-O3" "-mavx2" "-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe")
+        else()
+            add_compile_options("/Ot" "/fp:fast" "/Gv" "/O2" "/arch:AVX2")
+        endif()
+    endif()
 endif()
 
 add_compile_definitions(
@@ -40,7 +46,8 @@ file(GLOB
 
 file(GLOB
         src
-        src/*.c*
+        src/*.c
+        src/*.cpp
         )
 
 file(GLOB
@@ -61,6 +68,7 @@ file(GLOB
 file(GLOB
         win32
         scintilla/win32/*.cxx
+        scintilla/win32/*.c
         )
 
 set (CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO )
