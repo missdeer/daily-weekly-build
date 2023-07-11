@@ -159,6 +159,7 @@ jobs:
         shell: cmd
         run: |
           git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
+          copy notepad2\CMakeLists.txt notepad2-src\
           cd notepad2-src
           git apply ..\notepad2\mingw.patch
                     
