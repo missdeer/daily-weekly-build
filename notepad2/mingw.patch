@@ -1,3 +1,16 @@
+diff --git a/metapath/src/metapath.c b/metapath/src/metapath.c
+index ce4bfb06..f19497bc 100644
+--- a/metapath/src/metapath.c
++++ b/metapath/src/metapath.c
+@@ -266,7 +266,7 @@ BOOL WINAPI ConsoleHandlerRoutine(DWORD dwCtrlType) {
+ 	return FALSE;
+ }
+ 
+-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd) {
++int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+ 	UNREFERENCED_PARAMETER(hPrevInstance);
+ 	UNREFERENCED_PARAMETER(lpCmdLine);
+ #if 0 // used for Clang UBSan or printing debug message on console.
 diff --git a/src/Notepad2.c b/src/Notepad2.c
 index 78b47a0c..220d6110 100644
 --- a/src/Notepad2.c
@@ -11,10 +24,3 @@ index 78b47a0c..220d6110 100644
  	UNREFERENCED_PARAMETER(hPrevInstance);
  	UNREFERENCED_PARAMETER(lpCmdLine);
  #if 0 // used for Clang UBSan or printing debug message on console.
-diff --git a/wiki b/wiki
-index bf8efd66..4a797582 160000
---- a/wiki
-+++ b/wiki
-@@ -1 +1 @@
--Subproject commit bf8efd662b17d9c1711f2e6d3469df8c03393583
-+Subproject commit 4a7975823cb6edc40a8ea942251dac1395a7bce9

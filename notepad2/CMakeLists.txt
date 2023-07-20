@@ -76,3 +76,12 @@ endif ("${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
 add_executable(${PROJECT_NAME} ${EditLexers} ${src} ${lexlib} ${lexers} ${scintilla} ${win32} src/Notepad2.rc)
 target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi imm32 uxtheme)
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
+
+file(GLOB
+        metapath_src
+        metapath/src/*.c
+        metapath/src/*.cpp
+        )
+add_executable(metapath ${metapath_src} metapath/src/metapath.rc)
+target_link_libraries(metapath PRIVATE comctl32 shlwapi uxtheme)
+set_target_properties(metapath PROPERTIES WIN32_EXECUTABLE ON)
