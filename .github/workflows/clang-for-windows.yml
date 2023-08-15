@@ -45,7 +45,7 @@ jobs:
           cd llvm-project\build
           set CC=${{ matrix.compiler }}
           set CXX=${{ matrix.compiler }}
-          cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;lldb;libclc;polly;pstl;openmp;mlir" -DLLVM_ENABLE_RUNTIMES="compiler-rt;libcxx;libcxxabi;libc;libunwind" -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON -DLLVM_EXPORT_SYMBOLS_FOR_PLUGINS=ON ..\llvm
+          cmake.exe -GNinja -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=release -DLLVM_BUILD_TESTS=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;lldb;libclc;polly;pstl;mlir" -DLLVM_ENABLE_RUNTIMES=all -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_C_FLAGS="/utf-8" -DCMAKE_CXX_FLAGS="/utf-8" -DCMAKE_INSTALL_PREFIX=llvm_win_bin -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_ENABLE_LIBXML2=ON -DLLVM_ENABLE_ZLIB=ON -DLLVM_EXPORT_SYMBOLS_FOR_PLUGINS=ON -DLLVM_ENABLE_EH=ON ..\llvm
           ninja
           ninja install
           del /s /q *.obj
