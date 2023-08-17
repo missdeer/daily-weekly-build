@@ -134,7 +134,7 @@ jobs:
         with:
           update: true
           msystem: ${{ matrix.mingw_arch }}
-          install:  ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2 
+          install:  ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2  ${{ matrix.mingw_prefix }}-qt5
 
       - uses: actions/checkout@v2
         with:
