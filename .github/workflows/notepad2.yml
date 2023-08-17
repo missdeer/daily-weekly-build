@@ -142,10 +142,12 @@ jobs:
           fetch-depth: 1
           submodules: true
                     
+      - run: |
+          git clone https://github.com/missdeer/mingwdeployqt.git
+          
       - name: Build mingwdeployqt
         shell: msys2 {0}
         run: |
-          git clone https://github.com/missdeer/mingwdeployqt.git
           cd mingwdeployqt
           mkdir build
           cd build
