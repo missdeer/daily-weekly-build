@@ -1,7 +1,7 @@
 name: ipset
 on: 
   schedule:
-    - cron:  '0 4 1 * *'
+    - cron:  '0 4 * * *'
   push:
     paths:
       - '.github/workflows/ipset.yml'
@@ -23,61 +23,36 @@ jobs:
           find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
           cd GeoLite2-Country-CSV
           curl -o cnroute.txt -L https://cdn.jsdelivr.net/gh/17mon/china_ip_list@master/china_ip_list.txt
-          n=`grep -r -a ',IT,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > itroute.txt
-          n=`grep -r -a ',US,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > usroute.txt
-          n=`grep -r -a ',JP,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > jproute.txt
-          n=`grep -r -a ',TW,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > twroute.txt
-          n=`grep -r -a ',HK,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > hkroute.txt
-          n=`grep -r -a ',SG,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > sgroute.txt
-          n=`grep -r -a ',KR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > krroute.txt
-          n=`grep -r -a ',RU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ruroute.txt
-          n=`grep -r -a ',GB,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > gbroute.txt
-          n=`grep -r -a ',FR,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > frroute.txt
-          n=`grep -r -a ',DE,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > deroute.txt
-          n=`grep -r -a ',SE,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > seroute.txt
-          n=`grep -r -a ',ES,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > esroute.txt
-          n=`grep -r -a ',NL,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > nlroute.txt
-          n=`grep -r -a ',AS,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > asroute.txt
-          cat cnroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          cat jproute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          cat twroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          cat hkroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          cat krroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          cat sgroute.txt | while read ip; do sed -i "\|$ip|d" asroute.txt; done
-          n=`grep -r -a ',EU,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > euroute.txt
-          cat itroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat ruroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat gbroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat frroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat nlroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat seroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat esroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          cat deroute.txt | while read ip; do sed -i "\|$ip|d" euroute.txt; done
-          n=`grep -r -a ',OC,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > ocroute.txt
-          n=`grep -r -a ',AF,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > afroute.txt
-          n=`grep -r -a ',SA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > saroute.txt
-          n=`grep -r -a ',NA,' GeoLite2-Country-Locations-zh-CN.csv | awk -F ',' '{print $1}'`
-          cat GeoLite2-Country-Blocks-IPv4.csv | awk -F ',' '{ $3=null;print $0}' | grep "$n" | awk -F ' ' '{print $1}' > naroute.txt
-          cat usroute.txt | while read ip; do sed -i "\|$ip|d" naroute.txt; done
+          awk -F ',' 'NR==FNR && $0 ~ /,IT,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > itroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,US,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > usroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,JP,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > jproute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,TW,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > twroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,HK,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > hkroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,SG,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > sgroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,KR,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > krroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,RU,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > ruroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,GB,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > gbroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,FR,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > frroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,DE,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > deroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,SE,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > seroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,ES,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > esroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,NL,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > nlroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,AS,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > asroute.txt
+          cat cnroute.txt jproute.txt twroute.txt hkroute.txt krroute.txt sgroute.txt > combinedroutes.txt
+          grep -v -F -f combinedroutes.txt asroute.txt > asroute_filtered.txt
+          mv asroute_filtered.txt asroute.txt
+          rm combinedroutes.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,EU,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > euroute.txt
+          cat itroute.txt ruroute.txt gbroute.txt frroute.txt nlroute.txt seroute.txt esroute.txt deroute.txt > combinedroutes.txt
+          grep -v -F -f combinedroutes.txt euroute.txt > euroute_filtered.txt
+          mv euroute_filtered.txt euroute.txt
+          rm combinedroutes.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,OC,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > ocroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,AF,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > afroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,SA,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > saroute.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,NA,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > naroute.txt
+          grep -v -F -f usroute.txt naroute.txt > naroute_filtered.txt
+          mv naroute_filtered.txt naroute.txt
           mkdir ../routes
           mv *route.txt ../routes/
           cd ../routes

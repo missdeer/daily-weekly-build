@@ -1,7 +1,7 @@
 name: cidr
 on: 
   schedule:
-    - cron:  '0 4 15 * *'
+    - cron:  '0 4 * * *'
   push:
     paths:
       - '.github/workflows/cidr.yml'
