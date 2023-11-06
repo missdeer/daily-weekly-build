@@ -15,16 +15,16 @@ if [ ! -d mbedtls ]; then
 fi
 
 # dav1d
-[ ! -d dav1d ] && git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+[ ! -d dav1d ] && git clone https://github.com/videolan/dav1d
 
 # ffmpeg
 if [ ! -d ffmpeg ]; then
-	git clone --depth 1 https://github.com/FFmpeg/FFmpeg ffmpeg
+	git clone https://github.com/FFmpeg/FFmpeg ffmpeg
 	[ $TRAVIS -eq 1 ] && ( cd ffmpeg; git checkout $v_travis_ffmpeg )
 fi
 
 # freetype2
-[ ! -d freetype2 ] && git clone --depth 1 git://git.sv.nongnu.org/freetype/freetype2.git -b VER-$v_freetype
+[ ! -d freetype2 ] && git clone --recurse-submodules git://git.sv.nongnu.org/freetype/freetype2.git -b VER-$v_freetype
 
 # fribidi
 if [ ! -d fribidi ]; then
@@ -41,16 +41,19 @@ if [ ! -d harfbuzz ]; then
 fi
 
 # libass
-[ ! -d libass ] && git clone --depth 1 https://github.com/libass/libass
+[ ! -d libass ] && git clone https://github.com/libass/libass
 
 # lua
 if [ ! -d lua ]; then
 	mkdir lua
-	$WGET http://www.lua.org/ftp/lua-$v_lua.tar.gz -O - | \
+	$WGET https://www.lua.org/ftp/lua-$v_lua.tar.gz -O - | \
 		tar -xz -C lua --strip-components=1
 fi
 
+# libplacebo
+[ ! -d libplacebo ] && git clone --recursive https://github.com/haasn/libplacebo
+
 # mpv
-[ ! -d mpv ] && git clone --depth 1 https://github.com/mpv-player/mpv
+[ ! -d mpv ] && git clone https://github.com/mpv-player/mpv
 
 cd ..

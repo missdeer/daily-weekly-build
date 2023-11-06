@@ -13,10 +13,13 @@ else
 	exit 255
 fi
 
-unset CC CXX # meson wants these unset
-
+unset CC CXX
 meson setup $build --cross-file "$prefix_dir"/crossfile.txt \
-	-D{tests,docs}=false
+	-Dvulkan=disabled -Ddemos=false
 
 ninja -C $build -j$cores
 DESTDIR="$prefix_dir" ninja -C $build install
+
+# add missing library for static linking
+# this isn't "-lstdc++" due to a meson bug: https://github.com/mesonbuild/meson/issues/11300
+${SED:-sed} '/^Libs:/ s|$| -lc++|' "$prefix_dir/lib/pkgconfig/libplacebo.pc" -i
