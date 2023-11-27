@@ -50,19 +50,7 @@ jobs:
           ninja
           cp mingwdeployqt.exe /${{ matrix.mingw_arch }}/bin/
           cd ../..
-
-      - run: |
-          git clone --recursive https://code.videolan.org/videolan/libplacebo
-          
-      - name: Build libplacebo
-        shell: msys2 {0}
-        run: |
-          cd libplacebo
-          DIR=./build
-          env PATH=/${{ matrix.mingw_arch }}/bin/ meson setup build --prefix=/${{ matrix.mingw_arch }}
-          env PATH=/${{ matrix.mingw_arch }}/bin/ meson compile -C build
-          env PATH=/${{ matrix.mingw_arch }}/bin/ meson install -C build
-          
+         
       - name: checkout mpv
         run: |
           git clone --depth=1 https://github.com/mpv-player/mpv.git
