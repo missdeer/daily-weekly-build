@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           - msvc_arch: x64
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.2/LLVM-17.0.2-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.5/LLVM-17.0.5-win64.exe
             compiler: clang-cl
     env:
       targetName: llvm-win-${{ matrix.msvc_arch }}

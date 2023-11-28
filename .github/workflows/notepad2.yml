@@ -32,7 +32,7 @@ jobs:
           - toolset: cl
           - toolset: icx
           - toolset: clang-cl
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/LLVM-16.0.6-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.5/LLVM-17.0.5-win64.exe
     env:
       targetName: notepad2-${{ matrix.toolset }}
     steps:
