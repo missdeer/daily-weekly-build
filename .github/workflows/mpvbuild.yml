@@ -63,7 +63,7 @@ jobs:
           curl -sL -o mingw-w64-x86_64-headers-git-any.pkg.tar.zst ${{ matrix.oldpkg }}
           pacman -U mingw-w64-x86_64-headers-git-any.pkg.tar.zst  --noconfirm
           cd mpv
-          env PATH=/${{ matrix.mingw_arch }}/bin/ meson setup build --prefix=/${{ matrix.mingw_arch }} --werror -Dc_args="-Wno-error=deprecated -Wno-error=deprecated-declarations" -D cdda=enabled -D d3d-hwaccel=enabled -D d3d11=enabled -D dvdnav=enabled -D jpeg=enabled -D lcms2=enabled -D libarchive=enabled -D libbluray=enabled -D libmpv=true -D lua=enabled -D rubberband=enabled -D shaderc=enabled -D spirv-cross=enabled -D tests=false -D uchardet=enabled -D vapoursynth=enabled -D javascript=enabled  -D egl-angle-win32=enabled
+          env PATH=/${{ matrix.mingw_arch }}/bin/ meson setup build --prefix=/${{ matrix.mingw_arch }} --werror -Dc_args="-Wno-error=deprecated -Wno-error=deprecated-declarations" -D cdda=enabled -D d3d-hwaccel=disabled -D d3d11=enabled -D dvdnav=enabled -D jpeg=enabled -D lcms2=enabled -D libarchive=enabled -D libbluray=enabled -D libmpv=true -D lua=enabled -D rubberband=enabled -D shaderc=enabled -D spirv-cross=enabled -D tests=false -D uchardet=enabled -D vapoursynth=enabled -D javascript=enabled  -D egl-angle-win32=enabled
           env PATH=/${{ matrix.mingw_arch }}/bin/ meson compile -C build
           cd ..
           mkdir binary
