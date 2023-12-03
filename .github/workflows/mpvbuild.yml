@@ -35,7 +35,7 @@ jobs:
         with:
           update: true
           msystem: ${{ matrix.mingw_arch }}
-          install: python ${{ matrix.mingw_prefix }}-qt5 ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-pkg-config ${{ matrix.mingw_prefix }}-python3 ${{ matrix.mingw_prefix }}-gcc ${{ matrix.mingw_prefix }}-ffmpeg ${{ matrix.mingw_prefix }}-libjpeg-turbo ${{ matrix.mingw_prefix }}-lua51 ${{ matrix.mingw_prefix }}-meson  ${{ matrix.mingw_prefix }}-xxhash
+          install: python ${{ matrix.mingw_prefix }}-qt5 ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-pkg-config ${{ matrix.mingw_prefix }}-python3 ${{ matrix.mingw_prefix }}-gcc ${{ matrix.mingw_prefix }}-ffmpeg ${{ matrix.mingw_prefix }}-libjpeg-turbo ${{ matrix.mingw_prefix }}-lua51 ${{ matrix.mingw_prefix }}-meson  ${{ matrix.mingw_prefix }}-xxhash ${{ matrix.mingw_prefix }}-glslang ${{ matrix.mingw_prefix }}-SDL2_image ${{ matrix.mingw_prefix }}-libunwind ${{ matrix.mingw_prefix }}-libcdio  ${{ matrix.mingw_prefix }}-libcdio-paranoia  ${{ matrix.mingw_prefix }}-libdvdnav  ${{ matrix.mingw_prefix }}-rubberband  ${{ matrix.mingw_prefix }}-uchardet  ${{ matrix.mingw_prefix }}-vapoursynth ${{ matrix.mingw_prefix }}-mujs
           
       - run: |
           git clone https://github.com/missdeer/mingwdeployqt.git
@@ -58,7 +58,7 @@ jobs:
         shell: msys2 {0}
         run: |
           cd mpv
-          env PATH=/${{ matrix.mingw_arch }}/bin/ meson setup build --prefix=/${{ matrix.mingw_arch }} -Dlibmpv=true
+          env PATH=/${{ matrix.mingw_arch }}/bin/ meson setup build --prefix=/${{ matrix.mingw_arch }} --werror -Dc_args="-Wno-error=deprecated -Wno-error=deprecated-declarations" -D cdda=enabled -D d3d-hwaccel=enabled -D d3d11=enabled -D dvdnav=enabled -D jpeg=enabled -D lcms2=enabled -D libarchive=enabled -D libbluray=enabled -D libmpv=true -D lua=enabled -D rubberband=enabled -D shaderc=enabled -D spirv-cross=enabled -D tests=false -D uchardet=enabled -D vapoursynth=enabled -D javascript=enabled
           env PATH=/${{ matrix.mingw_arch }}/bin/ meson compile -C build
           cd ..
           mkdir binary
