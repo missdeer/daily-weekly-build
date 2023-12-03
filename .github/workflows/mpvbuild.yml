@@ -21,15 +21,18 @@ jobs:
           - mingw_arch: UCRT64
             c: gcc
             cxx: g++
-            mingw_prefix: mingw-w64-ucrt-x86_64
+            mingw_prefix: mingw-w64-ucrt-x86_64       
+            oldpkg: http://mirrors.ustc.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-headers-git-11.0.0.r404.g3a137bd87-1-any.pkg.tar.zst
           - mingw_arch: MINGW64
             c: gcc
             cxx: g++
-            mingw_prefix: mingw-w64-x86_64
+            mingw_prefix: mingw-w64-x86_64         
+            oldpkg: http://mirrors.ustc.edu.cn/msys2/mingw/mingw64/mingw-w64-x86_64-headers-git-11.0.0.r404.g3a137bd87-1-any.pkg.tar.zst
           - mingw_arch: CLANG64
             c: clang
             cxx: clang++
-            mingw_prefix: mingw-w64-clang-x86_64
+            mingw_prefix: mingw-w64-clang-x86_64   
+            oldpkg: http://mirrors.ustc.edu.cn/msys2/mingw/clang64/mingw-w64-clang-x86_64-headers-git-11.0.0.r404.g3a137bd87-1-any.pkg.tar.zst
     steps: 
       - uses: msys2/setup-msys2@v2
         with:
