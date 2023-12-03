@@ -32,6 +32,6 @@ ls -l
 #meson setup --cross-file iphone.txt --default-library static -Diconv=disabled -Dlua=disabled -Dlibmpv=false -Dcplayer=false build
 #meson compile -C build
 ./bootstrap.py
-curl -sL -o war https://waf.io/waf-2.0.26
+curl -sL -o waf https://waf.io/waf-2.0.26
 ./waf configure $OPTS
 ./waf build -j `sysctl -n hw.logicalcpu`
