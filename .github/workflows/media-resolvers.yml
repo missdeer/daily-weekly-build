@@ -28,8 +28,8 @@ jobs:
           cd ykdl
           pyinstaller.exe cykdl\__main__.py --onefile --name ykdl 
           dir dist
+          copy /y dist\ykdl.exe ..\ykdl.exe
           cd ..
-          copy dist\ykdl.exe ykdl.exe
     
       - name: upload ykdl artifact
         uses: actions/upload-artifact@v1
@@ -53,8 +53,8 @@ jobs:
           cd you-get
           pyinstaller.exe -F --path=src you-get
           dir dist
+          copy /y dist\you-get.exe ..\you-get.exe
           cd ..
-          copy dist\you-get.exe you-get.exe
     
       - name: upload you-get artifact
         uses: actions/upload-artifact@v1
@@ -78,8 +78,8 @@ jobs:
           cd youtube-dl
           pyinstaller.exe youtube_dl\__main__.py --onefile --name youtube-dl 
           dir dist
+          copy /y dist\youtube-dl.exe ..\youtube-dl.exe
           cd ..
-          copy dist\youtube-dl.exe youtube-dl.exe
     
       - name: upload youtube-dl artifact
         uses: actions/upload-artifact@v1
