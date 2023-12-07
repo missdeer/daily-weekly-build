@@ -44,6 +44,7 @@ jobs:
           file: ykdl.exe
           asset_name: ykdl.exe
           release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
           overwrite: true
 
       - name: make you-get
@@ -69,6 +70,7 @@ jobs:
           file: you-get.exe
           asset_name: you-get.exe
           release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
           overwrite: true
   
       - name: make youtube-dl
@@ -94,4 +96,5 @@ jobs:
           file: youtube-dl.exe
           asset_name: youtube-dl.exe
           release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
           overwrite: true
