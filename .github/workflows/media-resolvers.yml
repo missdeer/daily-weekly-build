@@ -112,8 +112,8 @@ jobs:
 
       - name: make ykdl
         run: |
-          git clone --depth=1 --single-branch --branch master https://github.com/SeaHOH/ykdl.git
-          cd ykdl
+          git clone --depth=1 --single-branch --branch master https://github.com/SeaHOH/ykdl.git ykdl-src
+          cd ykdl-src
           pyinstaller cykdl/__main__.py --onefile --name ykdl --clean
           ls -l dist
           cp dist/ykdl ../ykdl
@@ -137,8 +137,8 @@ jobs:
 
       - name: make you-get
         run: |
-          git clone --depth=1 --single-branch --branch develop https://github.com/soimort/you-get.git
-          cd you-get
+          git clone --depth=1 --single-branch --branch develop https://github.com/soimort/you-get.git you-get-src
+          cd you-get-src
           pyinstaller -F --path=src you-get --clean
           ls -l dist
           cp dist/you-get ../you-get
@@ -162,8 +162,8 @@ jobs:
   
       - name: make youtube-dl
         run: |
-          git clone --depth=1 --single-branch --branch master https://github.com/ytdl-org/youtube-dl.git
-          cd youtube-dl
+          git clone --depth=1 --single-branch --branch master https://github.com/ytdl-org/youtube-dl.git youtube-dl-src
+          cd youtube-dl-src
           pyinstaller youtube_dl/__main__.py --onefile --name youtube-dl  --clean
           ls -l dist
           cp dist/youtube-dl ../youtube-dl
