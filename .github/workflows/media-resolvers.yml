@@ -1,4 +1,4 @@
-name: Clang for Windows
+name: make media resolvers
 on: 
   schedule:
     - cron:  '0 5 * * 1'
