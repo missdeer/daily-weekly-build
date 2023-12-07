@@ -9,7 +9,7 @@ on:
     paths:
       - '.github/workflows/media-resolvers.yml'
 jobs:
-  make_resolvers:
+  make_resolvers-for-windows:
     runs-on: windows-latest
     steps:
       - name: install pyinstaller
@@ -98,3 +98,90 @@ jobs:
           release_name: ${{ env.RELEASE_DATE }}
           tag: ${{ env.RELEASE_DATE }}
           overwrite: true
+
+  make_resolvers-for-macos:
+    runs-on: macos-11
+    steps:
+      - name: install pyinstaller
+        run: |
+          pip install --upgrade pyinstaller m3u8
+
+      - name: Set up Release Date
+        run: echo "RELEASE_DATE=v$(Get-Date -Format "yyyy.MM.dd")" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        shell: powershell
+
+      - name: make ykdl
+        run: |
+          git clone --depth=1 --single-branch --branch master https://github.com/SeaHOH/ykdl.git
+          cd ykdl
+          pyinstaller cykdl/__main__.py --onefile --name ykdl --clean
+          dir dist
+          cp dist/kdl ../ykdl
+          cd ..
+    
+      - name: upload ykdl artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: ykdl
+          name: ykdl
+  
+      - name: upload ykdl Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: ykdl
+          asset_name: ykdl
+          release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
+          overwrite: true
+
+      - name: make you-get
+        run: |
+          git clone --depth=1 --single-branch --branch develop https://github.com/soimort/you-get.git
+          cd you-get
+          pyinstaller -F --path=src you-get --clean
+          dir dist
+          cp dist/you-get ../you-get
+          cd ..
+    
+      - name: upload you-get artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: you-get
+          name: you-get
+  
+      - name: upload you-get Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: you-get
+          asset_name: you-get
+          release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
+          overwrite: true
+  
+      - name: make youtube-dl
+        run: |
+          git clone --depth=1 --single-branch --branch master https://github.com/ytdl-org/youtube-dl.git
+          cd youtube-dl
+          pyinstaller youtube_dl/__main__.py --onefile --name youtube-dl  --clean
+          dir dist
+          cp dist/youtube-dl ../youtube-dl
+          cd ..
+    
+      - name: upload youtube-dl artifact
+        uses: actions/upload-artifact@v1
+        with:
+          path: youtube-dl
+          name: youtube-dl
+  
+      - name: upload youtube-dl Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: youtube-dl
+          asset_name: youtube-dl
+          release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
+          overwrite: true
+        
