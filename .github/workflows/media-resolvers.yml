@@ -116,7 +116,7 @@ jobs:
           cd ykdl
           pyinstaller cykdl/__main__.py --onefile --name ykdl --clean
           ls -l dist
-          cp dist/kdl ../ykdl
+          cp dist/ykdl ../ykdl
           cd ..
     
       - name: upload ykdl artifact
