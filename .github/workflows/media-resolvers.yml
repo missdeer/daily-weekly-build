@@ -115,7 +115,7 @@ jobs:
           git clone --depth=1 --single-branch --branch master https://github.com/SeaHOH/ykdl.git
           cd ykdl
           pyinstaller cykdl/__main__.py --onefile --name ykdl --clean
-          dir dist
+          ls -l dist
           cp dist/kdl ../ykdl
           cd ..
     
@@ -140,7 +140,7 @@ jobs:
           git clone --depth=1 --single-branch --branch develop https://github.com/soimort/you-get.git
           cd you-get
           pyinstaller -F --path=src you-get --clean
-          dir dist
+          ls -l dist
           cp dist/you-get ../you-get
           cd ..
     
@@ -165,7 +165,7 @@ jobs:
           git clone --depth=1 --single-branch --branch master https://github.com/ytdl-org/youtube-dl.git
           cd youtube-dl
           pyinstaller youtube_dl/__main__.py --onefile --name youtube-dl  --clean
-          dir dist
+          ls -l dist
           cp dist/youtube-dl ../youtube-dl
           cd ..
     
