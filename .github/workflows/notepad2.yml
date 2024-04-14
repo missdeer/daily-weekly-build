@@ -97,6 +97,7 @@ jobs:
           
       - name: copy libmmd.dll
         if: matrix.toolset == 'icx'
+        shell: cmd
         run: |
           for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
           echo %LATEST_VERSION%        
