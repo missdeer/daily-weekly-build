@@ -36,7 +36,8 @@ add_compile_definitions(
     _SCL_SECURE_NO_WARNINGS
 )
 include_directories(scintilla/include scintilla/lexlib scintilla/src scintilla/win32 src src/EditLexers)
-
+				 
+find_package(OpenMP REQUIRED)
 file(GLOB
         EditLexers
         src/EditLexers/*.c
@@ -72,7 +73,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR "${CMAKE_CXX_SIMULATE_ID}" STR
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 add_executable(${PROJECT_NAME} ${EditLexers} ${src} ${lexlib} ${lexers} ${scintilla} ${win32} src/Notepad2.rc)
-target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi imm32 uxtheme)
+target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi imm32 uxtheme OpenMP::OpenMP_CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 
 file(GLOB
