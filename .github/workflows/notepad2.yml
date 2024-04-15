@@ -88,6 +88,9 @@ jobs:
           set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
           git clone --recursive https://github.com/zufuliu/notepad2.git notepad2-src
           copy notepad2\CMakeLists.txt notepad2-src\
+          cd notepad2-src
+          git apply ..\notepad2\notepad2.patch
+          cd ..
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad2-src -B cmake-build
           cmake --build cmake-build --parallel --verbose
           mkdir bin
@@ -147,7 +150,7 @@ jobs:
         with:
           update: true
           msystem: ${{ matrix.mingw_arch }}
-          install:  ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2  ${{ matrix.mingw_prefix }}-qt5
+          install: ${{ matrix.mingw_prefix }}-toolchain ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2  ${{ matrix.mingw_prefix }}-qt5
 
       - uses: actions/checkout@v2
         with:
