@@ -150,28 +150,14 @@ jobs:
         with:
           update: true
           msystem: ${{ matrix.mingw_arch }}
-          install: ${{ matrix.mingw_prefix }}-toolchain ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2  ${{ matrix.mingw_prefix }}-qt5
+          install: ${{ matrix.mingw_prefix }}-toolchain ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2
 
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 1
           submodules: true
-                    
-      - run: |
-          git clone https://github.com/missdeer/mingwdeployqt.git
-          
-      - name: Build mingwdeployqt
-        shell: msys2 {0}
-        run: |
-          cd mingwdeployqt
-          mkdir build
-          cd build
-          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja ..
-          ninja
-          cp mingwdeployqt.exe /${{ matrix.mingw_arch }}/bin/
-          cd ../..
-          
+                     
       - name: prepare
         shell: cmd
         run: |
@@ -189,8 +175,7 @@ jobs:
           mkdir bin
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/notepad2.exe bin/
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/metapath.exe bin/
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe bin/notepad2.exe
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe bin/metapath.exe
+          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ldd bin/notepad2.exe | awk -v mingwarch="${{ matrix.mingw_arch }}" '{ arch = tolower(mingwarch); path = tolower($0);  if (path ~ "=> /" arch) print $(NF-1) }' | while read -r libpath; do cp -r $libpath bin/; done
           
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
