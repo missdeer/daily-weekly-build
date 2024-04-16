@@ -20,6 +20,9 @@ if(NOT NOAVX2 AND NOT CMAKE_BUILD_TYPE MATCHES Debug)
         endif()
     endif()
 endif()
+if(MINGW)
+  add_link_options("-municode")
+endif()
 
 add_compile_definitions(
     _WIN64
