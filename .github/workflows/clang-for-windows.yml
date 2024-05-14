@@ -1,7 +1,7 @@
 name: Clang for Windows
 on: 
   schedule:
-    - cron:  '0 18 3 * *'
+    - cron:  '0 18 * * 3'
   push:
     paths:
       - '.github/workflows/clang-for-windows.yml'
