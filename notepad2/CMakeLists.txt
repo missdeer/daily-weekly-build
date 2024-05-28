@@ -43,7 +43,7 @@ include_directories(scintilla/include scintilla/lexlib scintilla/src scintilla/w
 find_package(OpenMP REQUIRED)
 file(GLOB
         EditLexers
-        src/EditLexers/*.c
+        src/EditLexers/*.cpp
         )
 
 file(GLOB
