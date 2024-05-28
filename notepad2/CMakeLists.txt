@@ -80,10 +80,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi imm32 uxtheme Ope
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 
 file(GLOB
-        metapath_src
-        metapath/src/*.c
-        metapath/src/*.cpp
+        matepath_src
+        matepath/src/*.c
+        matepath/src/*.cpp
         )
-add_executable(metapath ${metapath_src} metapath/src/metapath.rc)
-target_link_libraries(metapath PRIVATE comctl32 shlwapi uxtheme)
-set_target_properties(metapath PROPERTIES WIN32_EXECUTABLE ON)
+add_executable(matepath ${matepath_src} matepath/src/matepath.rc)
+target_link_libraries(matepath PRIVATE comctl32 shlwapi uxtheme)
+set_target_properties(matepath PROPERTIES WIN32_EXECUTABLE ON)
