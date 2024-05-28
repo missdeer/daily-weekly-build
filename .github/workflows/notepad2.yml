@@ -95,7 +95,7 @@ jobs:
           cmake --build cmake-build --parallel --verbose
           mkdir bin
           copy cmake-build\notepad2.exe bin\
-          copy cmake-build\metapath.exe bin\
+          copy cmake-build\matepath.exe bin\
           cd ..
           
       - name: copy oneAPI redist
@@ -173,7 +173,7 @@ jobs:
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake --build ${{ matrix.mingw_prefix }}-build --parallel --verbose
           mkdir bin
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/notepad2.exe bin/
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/metapath.exe bin/
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/matepath.exe bin/
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin ldd bin/notepad2.exe | awk -v mingwarch="${{ matrix.mingw_arch }}" '{ arch = tolower(mingwarch); path = tolower($0);  if (path ~ "=> /" arch) print $(NF-1) }' | while read -r libpath; do cp -r $libpath bin/; done
           
       - name: upload executable artifact
