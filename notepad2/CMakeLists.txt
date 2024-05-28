@@ -75,7 +75,7 @@ file(GLOB
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR "${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
-add_executable(${PROJECT_NAME} ${EditLexers} ${src} ${lexlib} ${lexers} ${scintilla} ${win32} src/Notepad2.rc)
+add_executable(${PROJECT_NAME} ${EditLexers} ${src} ${lexlib} ${lexers} ${scintilla} ${win32} src/Notepad4.rc)
 target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi imm32 uxtheme OpenMP::OpenMP_CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 
