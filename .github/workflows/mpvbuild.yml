@@ -103,60 +103,7 @@ jobs:
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-${{ matrix.mingw_prefix }}.7z" ${{ secrets.FILE_SERVER }}
           %GOPATH%\bin\transfer.exe -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-${{ matrix.mingw_prefix }}.7z
-          
-  iOS:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        target: [distribution, development]
-    steps:              
-      - name: prepare dependencies
-        run: |
-          brew install yasm automake autoconf m4 p7zip meson
-
-      - name: Check out code 
-        uses: actions/checkout@v2
-        with:
-          ref: master
-
-      - name: build mpv
-        run: |
-          pwd
-          ls -l
-          cd ios
-          ./download.sh 
-          ./build.sh -e ${{ matrix.target }}
-          cd ..
-
-      - name: upload artifact
-        uses: actions/upload-artifact@v1
-        with:
-          path: ios/lib
-          name: mpv-ios-${{ matrix.target }}
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.22
-        id: go
-
-      - name: Build transfer command
-        run: |
-          git clone --depth=1 https://github.com/missdeer/transfer.git gopath
-          cd gopath
-          go get
-          go build -ldflags="-s -w" -o bin/transfer
-          cd ..
-
-      - name: upload to own file server
-        run: |
-          export GOPATH=$PWD/gopath
-          cd ios
-          7z a mpv-ios-${{ matrix.target }}.7z lib
-          ls -l
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-ios-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
-          $GOPATH/bin/transfer -m upload -c ${{ secrets.FILE_SERVER3 }} -p quic mpv-ios-${{ matrix.target }}.7z
-          
+     
   Android:
     runs-on: ubuntu-latest
     strategy:
