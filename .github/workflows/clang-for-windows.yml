@@ -1,7 +1,5 @@
 name: Clang for Windows
 on: 
-  schedule:
-    - cron:  '0 18 * * 3'
   push:
     paths:
       - '.github/workflows/clang-for-windows.yml'
@@ -64,30 +62,3 @@ jobs:
           path: llvm-project\build\llvm_win_bin\
           name: llvm-win-${{ matrix.msvc_arch }}-dev
 
-      - name: Set up Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.22
-        id: go
-
-      - name: Build transfer command
-        run: |
-          git clone --depth=1 https://github.com/missdeer/transfer.git gopath
-          cd gopath
-          go get
-          go build -ldflags="-s -w" -o bin\transfer.exe
-          cd ..
-          
-      - name: upload to own file server
-        shell: cmd
-        run: |
-          set TRANSFER=%CD%\gopath\bin\transfer.exe
-          cd llvm-project\build\llvm_win_bin\bin
-          7z.exe a ..\llvm-win-${{ matrix.msvc_arch }}.7z *
-          cd ..
-          dir
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}.7z" ${{ secrets.FILE_SERVER }}
-          del /q llvm-win-${{ matrix.msvc_arch }}.7z
-          7z.exe a llvm-win-${{ matrix.msvc_arch }}-dev.7z bin include lib libexec share
-          dir
-          curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@llvm-win-${{ matrix.msvc_arch }}-dev.7z" ${{ secrets.FILE_SERVER }}
