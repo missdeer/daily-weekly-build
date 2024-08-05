@@ -100,7 +100,7 @@ jobs:
           overwrite: true
 
   make_resolvers-for-macos:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - name: install pyinstaller
         run: |
