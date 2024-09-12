@@ -84,7 +84,7 @@ jobs:
           args: --verbose --release
 
       - name: Upload artifact quiche
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: quiche-mac-amd64
           path: target
@@ -144,7 +144,7 @@ jobs:
           args: --target=${{ matrix.target }} --verbose --release
 
       - name: Upload artifact quiche
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: quiche-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libquiche.a
@@ -208,7 +208,7 @@ jobs:
           args: --target=${{ matrix.target }} --verbose --release
           
       - name: Upload artifact quiche
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: quiche-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/deps/
@@ -266,7 +266,7 @@ jobs:
           use-cross: true
 
       - name: Upload artifact quiche
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: quiche-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/deps/
@@ -421,7 +421,7 @@ jobs:
           objs/nginx -V
 
       - name: Upload artifact nginx
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: nginx-ubuntu-amd64
           path: nginx-${{ matrix.version }}/objs/nginx
@@ -518,7 +518,7 @@ jobs:
           ANDROID_NDK_HOME: ${{ github.workspace }}/android-ndk-r${{ env.NDK_LTS_VER  }}
 
       - name: Upload artifact quiche
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: quiche-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/deps

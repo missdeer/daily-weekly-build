@@ -51,13 +51,13 @@ jobs:
           del /s /q *.cxx
 
       - name: upload executable artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: llvm-project\build\llvm_win_bin\bin
           name: llvm-win-${{ matrix.msvc_arch }}
 
       - name: upload devel artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: llvm-project\build\llvm_win_bin\
           name: llvm-win-${{ matrix.msvc_arch }}-dev

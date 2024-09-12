@@ -32,7 +32,7 @@ jobs:
           cd ..
     
       - name: upload ykdl artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: ykdl.exe
           name: ykdl.exe
@@ -58,7 +58,7 @@ jobs:
           cd ..
     
       - name: upload you-get artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: you-get.exe
           name: you-get.exe
@@ -84,7 +84,7 @@ jobs:
           cd ..
     
       - name: upload youtube-dl artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: youtube-dl.exe
           name: youtube-dl.exe
@@ -120,7 +120,7 @@ jobs:
           cd ..
     
       - name: upload ykdl artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: ykdl
           name: ykdl
@@ -145,7 +145,7 @@ jobs:
           cd ..
     
       - name: upload you-get artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: you-get
           name: you-get
@@ -170,7 +170,7 @@ jobs:
           cd ..
     
       - name: upload youtube-dl artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: youtube-dl
           name: youtube-dl

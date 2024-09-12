@@ -77,7 +77,7 @@ jobs:
           xcopy %CD%\crashpad\crashpad\*.h google-crashpad\include /y /s /f /i
 
       - name: upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: google-crashpad
           name: crashpad-win-${{ matrix.msvc_arch }}
