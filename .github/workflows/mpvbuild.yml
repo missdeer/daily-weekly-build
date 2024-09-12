@@ -74,7 +74,7 @@ jobs:
           find $PWD/binary -name '*mpv*.dll' -type f -exec env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe {} \;
                     
       - name: upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: binary
           name: mpv-${{ matrix.mingw_prefix }}
@@ -129,7 +129,7 @@ jobs:
           cd ..
 
       - name: upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           path: android/prefix/${{ matrix.target }}/lib/
           name: mpv-android-${{ matrix.target }}
