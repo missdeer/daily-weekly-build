@@ -139,7 +139,7 @@ jobs:
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
-          path: android/prefix/${{ matrix.target }}/lib/
+          path: android/prefix/${{ matrix.target }}
           name: mpv-android-${{ matrix.target }}
 
       - name: Set up Go
@@ -160,7 +160,7 @@ jobs:
         run: |
           export GOPATH=$PWD/gopath
           cd android/prefix/${{ matrix.target }}
-          7z a mpv-android-${{ matrix.target }}.7z lib
+          7z a mpv-android-${{ matrix.target }}.7z usr
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
           sudo sysctl -w net.core.rmem_max=2500000
