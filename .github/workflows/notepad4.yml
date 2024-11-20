@@ -91,7 +91,7 @@ jobs:
           git clone --recursive https://github.com/zufuliu/notepad4.git notepad4-src
           copy notepad4\CMakeLists.txt notepad4-src\
           cd notepad4-src
-          git apply ..\notepad4\notepad4.patch
+          git apply ..\notepad4\EditView.cxx.patch
           cd ..
           cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
           cmake --build cmake-build --parallel --verbose
@@ -201,7 +201,7 @@ jobs:
           git clone --recursive https://github.com/zufuliu/notepad4.git notepad4-src
           copy notepad4\CMakeLists.txt notepad4-src\
           cd notepad4-src
-          git apply ..\notepad4\notepad4.patch
+          git apply ..\notepad4\EditView.cxx.patch
                     
       - name: build
         shell: msys2 {0}
