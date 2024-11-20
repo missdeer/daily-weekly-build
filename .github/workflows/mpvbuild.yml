@@ -133,7 +133,7 @@ jobs:
           cd android
           ./include/ci.sh export >>$GITHUB_ENV
           ./include/ci.sh install
-          ./include/ci.sh build
+          ./include/ci.sh build ${{ matrix.target }}
           mkdir -p prefix/${{ matrix.target }}/lib
           find . -name '*.a' -o -name '*.so' -type f -print -exec cp {} prefix/${{ matrix.target }}/lib/ \;
           cd ..
