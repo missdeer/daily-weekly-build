@@ -133,7 +133,6 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        avx512: [ON, OFF]
         include:
           - mingw_arch: UCRT64
             mingw_prefix: mingw-w64-ucrt-x86_64
@@ -142,6 +141,7 @@ jobs:
             cxx: g++
             cmake_prefix_path: /ucrt64
             stdlib: /ucrt64/bin/libstdc++-6.dll
+            avx512: OFF
           - mingw_arch: CLANG64 
             mingw_prefix: mingw-w64-clang-x86_64
             toolchains: clang
@@ -149,6 +149,7 @@ jobs:
             cxx: clang++
             cmake_prefix_path: /clang64
             stdlib: /clang64/bin/libc++.dll
+            avx512: OFF
           - mingw_arch: MINGW64
             mingw_prefix: mingw-w64-x86_64
             toolchains: gcc
@@ -156,6 +157,31 @@ jobs:
             cxx: g++
             cmake_prefix_path: /mingw64
             stdlib: /mingw64/bin/libstdc++-6.dll
+            avx512: OFF
+          - mingw_arch: UCRT64
+            mingw_prefix: mingw-w64-ucrt-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            cmake_prefix_path: /ucrt64
+            stdlib: /ucrt64/bin/libstdc++-6.dll
+            avx512: ON  
+          - mingw_arch: CLANG64 
+            mingw_prefix: mingw-w64-clang-x86_64
+            toolchains: clang
+            c: clang
+            cxx: clang++
+            cmake_prefix_path: /clang64
+            stdlib: /clang64/bin/libc++.dll
+            avx512: ON  
+          - mingw_arch: MINGW64
+            mingw_prefix: mingw-w64-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            cmake_prefix_path: /mingw64
+            stdlib: /mingw64/bin/libstdc++-6.dll
+            avx512: ON  
     steps:
       - uses: msys2/setup-msys2@v2
         with:
