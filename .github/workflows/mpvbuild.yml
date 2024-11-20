@@ -113,19 +113,27 @@ jobs:
       - name: prepare toolchain
         run: |
           sudo apt-get update -qq;
-          sudo apt-get install -qq nasm p7zip-full;
+          sudo apt-get install -qq nasm p7zip-full  autoconf pkg-config libtool ninja-build python3-pip;
+          sudo pip3 install meson
+          
       - name: Check out code 
         uses: actions/checkout@v2
         with:
           ref: master
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
 
       - name: build mpv
         run: |
           pwd
           ls -l
           cd android
-          ./download.sh 
-          ./buildall.sh --arch ${{ matrix.target }} mpv
+          ./include/ci.sh export >>$GITHUB_ENV
+          ./include/ci.sh install
+          ./include/ci.sh build
           cd ..
 
       - name: upload artifact
