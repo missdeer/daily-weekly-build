@@ -30,6 +30,7 @@ jobs:
       matrix:
         toolset: [cl, icx, clang-cl]
         msvc_arch: [x64]
+        avx512: [ON, OFF]
         include:
           - toolset: cl
           - toolset: icx
@@ -92,7 +93,7 @@ jobs:
           cd notepad4-src
           git apply ..\notepad4\notepad4.patch
           cd ..
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
+          cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
           cmake --build cmake-build --parallel --verbose
           mkdir bin
           copy cmake-build\notepad4.exe bin\
@@ -116,14 +117,23 @@ jobs:
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
+        if: matrix.avx512 == 'OFF'
         with:
           path: bin
           name: notepad4-${{ matrix.toolset }}
+
+      - name: upload executable artifact
+        uses: actions/upload-artifact@v4
+        if: matrix.avx512 == 'ON'
+        with:
+          path: bin
+          name: notepad4-${{ matrix.toolset }}-avx512
 
   notepad4-nightly-mingw:
     runs-on: windows-latest
     strategy:
       matrix:
+        avx512: [ON, OFF]
         include:
           - mingw_arch: UCRT64
             mingw_prefix: mingw-w64-ucrt-x86_64
@@ -170,7 +180,7 @@ jobs:
       - name: build
         shell: msys2 {0}
         run: |
-          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S notepad4-src -B ${{ matrix.mingw_prefix }}-build
+          env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja -S notepad4-src -B ${{ matrix.mingw_prefix }}-build
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cmake --build ${{ matrix.mingw_prefix }}-build --parallel --verbose
           mkdir bin
           env MSYSTEM=${{ matrix.mingw_arch }} PATH=/${{ matrix.mingw_arch }}/bin:/usr/bin:$PATH cp ${{ matrix.mingw_prefix }}-build/notepad4.exe bin/
@@ -179,6 +189,14 @@ jobs:
           
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
+        if: matrix.avx512 == 'OFF'
         with:
           path: bin
           name: notepad4-${{ matrix.mingw_prefix }}
+
+      - name: upload executable artifact
+        uses: actions/upload-artifact@v4
+        if: matrix.avx512 == 'ON'
+        with:
+          path: bin
+          name: notepad4-${{ matrix.mingw_prefix }}-avx512
