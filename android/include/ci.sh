@@ -85,7 +85,7 @@ msg "Building mpv"
 	exit 1
 }
 
-msg "Building mpv-android"
-./buildall.sh -n
+#msg "Building mpv-android"
+#./buildall.sh -n
 
 exit 0
