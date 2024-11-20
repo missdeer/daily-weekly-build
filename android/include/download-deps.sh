@@ -2,7 +2,7 @@
 
 . ./include/depinfo.sh
 
-[ -z "$TRAVIS" ] && TRAVIS=0
+[ -z "$IN_CI" ] && IN_CI=0
 [ -z "$WGET" ] && WGET=wget
 
 mkdir -p deps && cd deps
@@ -10,8 +10,8 @@ mkdir -p deps && cd deps
 # mbedtls
 if [ ! -d mbedtls ]; then
 	mkdir mbedtls
-	$WGET https://github.com/ARMmbed/mbedtls/archive/mbedtls-$v_mbedtls.tar.gz -O - | \
-		tar -xz -C mbedtls --strip-components=1
+	$WGET https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-$v_mbedtls/mbedtls-$v_mbedtls.tar.bz2 -O - | \
+		tar -xj -C mbedtls --strip-components=1
 fi
 
 # dav1d
@@ -20,7 +20,7 @@ fi
 # ffmpeg
 if [ ! -d ffmpeg ]; then
 	git clone https://github.com/FFmpeg/FFmpeg ffmpeg
-	[ $TRAVIS -eq 1 ] && ( cd ffmpeg; git checkout $v_travis_ffmpeg )
+	[ $IN_CI -eq 1 ] && git -C ffmpeg checkout $v_ci_ffmpeg
 fi
 
 # freetype2
@@ -38,6 +38,13 @@ if [ ! -d harfbuzz ]; then
 	mkdir harfbuzz
 	$WGET https://github.com/harfbuzz/harfbuzz/releases/download/$v_harfbuzz/harfbuzz-$v_harfbuzz.tar.xz -O - | \
 		tar -xJ -C harfbuzz --strip-components=1
+fi
+
+# unibreak
+if [ ! -d unibreak ]; then
+	mkdir unibreak
+	$WGET https://github.com/adah1972/libunibreak/releases/download/libunibreak_${v_unibreak/./_}/libunibreak-${v_unibreak}.tar.gz -O - | \
+		tar -xz -C unibreak --strip-components=1
 fi
 
 # libass

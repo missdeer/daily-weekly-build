@@ -4,19 +4,20 @@
 
 . ./include/path.sh # load $os var
 
-[ -z "$TRAVIS" ] && TRAVIS=0 # skip steps not required for CI?
+[ -z "$IN_CI" ] && IN_CI=0 # skip steps not required for CI?
 [ -z "$WGET" ] && WGET=wget # possibility of calling wget differently
 
 if [ "$os" == "linux" ]; then
-	if [ $TRAVIS -eq 0 ]; then
-		hash yum &>/dev/null && {
+	if [ $IN_CI -eq 0 ]; then
+		if hash yum &>/dev/null; then
 			sudo yum install autoconf pkgconfig libtool ninja-build \
-			python3-pip python3-setuptools unzip wget;
-			python3 -m pip install meson; }
-		apt-get -v &>/dev/null && {
+				unzip wget meson
+		elif apt-get -v &>/dev/null; then
 			sudo apt-get install autoconf pkg-config libtool ninja-build \
-			python3-pip python3-setuptools unzip;
-			python3 -m pip install meson; }
+				unzip wget meson
+		else
+			echo "Note: dependencies were not installed, you have to do that manually."
+		fi
 	fi
 
 	if ! javac -version &>/dev/null; then
@@ -30,7 +31,7 @@ if [ "$os" == "linux" ]; then
 
 	os_ndk="linux"
 elif [ "$os" == "mac" ]; then
-	if [ $TRAVIS -eq 0 ]; then
+	if [ $IN_CI -eq 0 ]; then
 		if ! hash brew 2>/dev/null; then
 			echo "Error: brew not found. You need to install Homebrew: https://brew.sh/"
 			exit 255
@@ -61,7 +62,7 @@ sdkmanager () {
 	"$exe" --sdk_root="${ANDROID_HOME}" "$@"
 }
 echo y | sdkmanager \
-	"platforms;android-33" "build-tools;${v_sdk_build_tools}" \
+	"platforms;android-${v_sdk_platform}" "build-tools;${v_sdk_build_tools}" \
 	"extras;android;m2repository"
 
 # Android NDK (either standalone or installed by SDK)
