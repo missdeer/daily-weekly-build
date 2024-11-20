@@ -34,7 +34,7 @@ build_prefix() {
 	# build everything mpv depends on (but not mpv itself)
 	for x in ${dep_mpv[@]}; do
 		msg "Building $x"
-		./buildall.sh $x --arch $2
+		./buildall.sh $x
 	done
 
 	if [[ "$CACHE_MODE" == folder && -w "$CACHE_FOLDER" ]]; then
@@ -79,7 +79,7 @@ else
 fi
 
 msg "Building mpv"
-./buildall.sh -n mpv --arch $2 || {
+./buildall.sh --arch $2 mpv || {
 	# show logfile if configure failed
 	[ ! -f deps/mpv/_build/config.h ] && cat deps/mpv/_build/meson-logs/meson-log.txt
 	exit 1
