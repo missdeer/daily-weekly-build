@@ -120,7 +120,7 @@ jobs:
         if: matrix.avx512 == 'OFF'
         with:
           path: bin
-          name: notepad4-${{ matrix.toolset }}
+          name: notepad4-${{ matrix.toolset }}-avx2
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
@@ -218,7 +218,7 @@ jobs:
         if: matrix.avx512 == 'OFF'
         with:
           path: bin
-          name: notepad4-${{ matrix.mingw_prefix }}
+          name: notepad4-${{ matrix.mingw_prefix }}-avx2
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
