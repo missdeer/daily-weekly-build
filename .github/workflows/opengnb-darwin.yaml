@@ -12,15 +12,12 @@ jobs:
   build_and_publish_opengnb:
     runs-on: macos-latest  # GitHub 提供的 macOS 运行环境（默认 arm64）
 
-    env:
-      RELEASE_NAME: opengnb_macos_1.6.a
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           repository: gnbdev/opengnb
-          ref: main
+          ref: master
 
       - name: Install dependencies
         run: |
