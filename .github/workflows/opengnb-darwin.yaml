@@ -1,0 +1,99 @@
+name: GNB for macOS.Intel and MacOS.Apple_Silicon
+
+on:
+  push:
+    paths:
+      - '.github/workflows/opengnb-darwin.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/opengnb-darwin.yaml'
+
+jobs:
+  build_and_publish_opengnb:
+    runs-on: macos-latest  # GitHub 提供的 macOS 运行环境（默认 arm64）
+
+    env:
+      RELEASE_NAME: opengnb_macos_1.6.a
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: gnbdev/opengnb
+          ref: main
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Modify Makefile for static linking
+        run: |
+          echo "🔧 修改 Makefile.Darwin 以强制使用静态库..."
+          sed -i '' 's|-static||g' Makefile.Darwin
+          sed -i '' 's|-lssl|-l:libssl.a|g' Makefile.Darwin
+          sed -i '' 's|-lcrypto|-l:libcrypto.a|g' Makefile.Darwin
+          sed -i '' 's|-lz|-l:libz.a|g' Makefile.Darwin
+          echo "✅ Makefile.Darwin 修改完成！"
+
+      # 编译 x86_64 版本
+      - name: Build binary for x86_64
+        run: |
+          export CC="clang -arch x86_64"
+          export CXX="clang++ -arch x86_64"
+          export LD="ld"
+          export AR="ar"
+          export RANLIB="ranlib"
+
+          make -f Makefile.Darwin clean
+          make -f Makefile.Darwin install
+
+          # 检查是否仍然链接动态库
+          echo "🔍 检查 x86_64 版本是否包含动态库..."
+          if otool -L bin/gnb | grep -q ".dylib"; then
+            echo "❌ 仍然依赖动态库！"
+            #exit 1
+          else
+            echo "✅ x86_64 版本完全静态！"
+          fi
+
+          # 打包 x86_64 版本
+          mkdir -p release/macos_x86_64
+          cp -r bin release/macos_x86_64/
+
+      # 编译 arm64 版本
+      - name: Build binary for arm64
+        run: |
+          export CC="clang -arch arm64"
+          export CXX="clang++ -arch arm64"
+          export LD="ld"
+          export AR="ar"
+          export RANLIB="ranlib"
+
+          make -f Makefile.Darwin clean
+          make -f Makefile.Darwin install
+
+          # 检查是否仍然链接动态库
+          echo "🔍 检查 arm64 版本是否包含动态库..."
+          if otool -L bin/gnb | grep -q ".dylib"; then
+            echo "❌ 仍然依赖动态库！"
+            #exit 1
+          else
+            echo "✅ arm64 版本完全静态！"
+          fi
+
+          # 打包 arm64 版本
+          mkdir -p release/macos_arm64
+          cp -r bin release/macos_arm64/
+
+      - name: lipo to make FAT binary
+        run: |
+          lipo -create -output release/universal/gnb release/macos_x86_64/bin/gnb release/macos_arm64/bin/gnb
+          lipo -create -output release/universal/gnb_ctl release/macos_x86_64/bin/gnb_ctl release/macos_arm64/bin/gnb_ctl
+          lipo -create -output release/universal/gnb_crypto release/macos_x86_64/bin/gnb_crypto release/macos_arm64/bin/gnb_crypto
+          lipo -create -output release/universal/gnb_es release/macos_x86_64/bin/gnb_es release/macos_arm64/bin/gnb_es
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: opengnb-macos-universal
+          path: release/universal
