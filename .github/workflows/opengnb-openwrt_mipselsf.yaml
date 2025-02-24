@@ -89,5 +89,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: opengnb-openwrt-mipselsf.zip
+          name: opengnb-openwrt-mipselsf
           path: release

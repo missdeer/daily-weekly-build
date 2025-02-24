@@ -48,5 +48,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: opengnb-openwrt-x86_64.zip
+          name: opengnb-openwrt-x86_64
           path: release

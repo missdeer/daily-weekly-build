@@ -50,5 +50,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: opengnb-openwrt-arm64.zip
+          name: opengnb-openwrt-arm64
           path: release
