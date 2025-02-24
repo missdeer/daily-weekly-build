@@ -93,5 +93,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: opengnb-macos-universal
+          name: opengnb-macos-universal.zip
           path: release/universal
