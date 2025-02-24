@@ -1,0 +1,93 @@
+name: GNB for OpenWRT.muslsf (eg.JDC Luban) 
+
+on:
+  push:
+    paths:
+      - '.github/workflows/opengnb-openwrt_mipselsf.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/opengnb-openwrt_mipselsf.yaml'
+
+jobs:
+  build_and_publish_mips_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: gnbdev/opengnb
+          ref: master  # 指定要检出的分支或提交
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential flex bison \
+              autoconf automake texinfo libtool wget curl gawk \
+              cmake ninja-build
+
+      - name: Clean up previous build artifacts
+        run: |
+          sudo rm -rf /tmp/mipsel-linux-muslsf-cross
+
+      - name: Download and Extract mipsel-musl toolchain
+        run: |
+          # 下载工具链
+          wget https://musl.cc/mipsel-linux-muslsf-cross.tgz -O /tmp/mipsel-linux-muslsf-cross.tgz
+          # 解压到 /tmp/mipsel-linux-muslsf-cross
+          tar -xvzf /tmp/mipsel-linux-muslsf-cross.tgz -C /tmp/
+          # 设置工具链路径并更新 PATH
+          echo "TOOLCHAIN_PATH=/tmp/mipsel-linux-muslsf-cross" >> $GITHUB_ENV
+          echo "/tmp/mipsel-linux-muslsf-cross/bin" >> $GITHUB_PATH  # 自动添加工具链到 PATH
+
+      - name: Verify toolchain
+        run: |
+          echo "Current PATH: $PATH"
+          ls -l /tmp/mipsel-linux-muslsf-cross/bin  # 确认文件是否存在
+          command -v mipsel-linux-muslsf-gcc
+          mipsel-linux-muslsf-gcc --version
+
+      - name: Build binary with musl
+        run: |
+          export CROSS_COMPILE=mipsel-linux-muslsf-
+          export CC=${CROSS_COMPILE}gcc
+          export CXX=${CROSS_COMPILE}g++
+          export LD=${CROSS_COMPILE}ld
+          export AR=${CROSS_COMPILE}ar
+          export AS=${CROSS_COMPILE}as
+          export RANLIB=${CROSS_COMPILE}ranlib
+
+          # 确保 musl 交叉编译器可用
+          if ! command -v ${CC} >/dev/null; then
+            echo "Error: ${CC} not found."
+            exit 1
+          fi
+
+          # 添加软浮点编译选项
+          export CFLAGS="-march=mips32r2 -mtune=mips32r2 -msoft-float"
+          export LDFLAGS="-msoft-float"
+
+          # 修改 Makefile 以进行静态编译
+          sed -i 's|CC} -o ${GNB_CTL}|CC} -o ${GNB_CTL} -static|' Makefile.openwrt
+          sed -i 's|CC} -o ${GNB_ES}|CC} -o ${GNB_ES} -static|' Makefile.openwrt
+          sed -i 's|CC} -o ${GNB_CRYPTO}|CC} -o ${GNB_CRYPTO} -static|' Makefile.openwrt
+          sed -i 's|CC} -o ${GNB_CLI}|CC} -o ${GNB_CLI} -static|' Makefile.openwrt
+
+          make -f Makefile.openwrt clean
+          make -f Makefile.openwrt install
+
+      - name: Clean up temporary files
+        run: |
+          sudo rm -rf /tmp/mipsel-linux-muslsf-cross
+
+      - name: Build and Package
+        run: |
+          mkdir -p release conf
+          cp -r bin release/
+          cp -r conf release/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opengnb-openwrt-mipselsf.zip
+          path: release

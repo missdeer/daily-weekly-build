@@ -1,0 +1,52 @@
+name: GNB for openwrt.X86_64
+
+on:
+  push:
+    paths:
+      - '.github/workflows/opengnb-openwrt_x86_64.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/opengnb-openwrt_x86_64.yaml'
+
+jobs:
+  build_and_publish_release:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: gnbdev/opengnb
+          ref: master  # 指定要检出的分支或提交
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.24
+          
+      - name: Install ARM64 cross-compiler
+        run: sudo apt-get update && sudo apt-get install -y gcc
+      
+      - name: Build binary
+        run: |
+          export CC=gcc
+          sed -i 's|\(CC} -o ${GNB_CTL} ${GNB_CTL_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.openwrt
+          sed -i 's|\(CC} -o ${GNB_ES} ${GNB_ES_OBJS} ${CRYPTO_OBJS} ${MINIUPNP_OBJS} ${LIBNATPMP_OBJS} ${GNB_ES_LDFLAGS}\)|\1 -static|' Makefile.openwrt
+          sed -i 's|\(CC} -o ${GNB_CRYPTO} ./src/gnb_crypto.o ${CRYPTO_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.openwrt
+          sed -i 's|\(CC} -o ${GNB_CLI} ${GNB_OBJS} ${GNB_CLI_OBJS} ${GNB_PF_OBJS} ${CRYPTO_OBJS} ${ZLIB_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.openwrt
+          make -f Makefile.openwrt clean
+          make -f Makefile.openwrt install 
+        shell: bash
+      
+      - name: Build and Package
+        run: |
+          mkdir release conf 
+          cp -r bin release/
+          cp -r conf release/
+        shell: bash
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opengnb-openwrt-x86_64.zip
+          path: release

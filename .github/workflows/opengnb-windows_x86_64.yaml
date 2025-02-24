@@ -1,0 +1,66 @@
+name: GNB for Winddows.X86_64
+
+on:
+  push:
+    paths:
+      - '.github/workflows/opengnb-windows_x86_64.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/opengnb-windows_x86_64.yaml'
+
+jobs:
+  build_and_publish_release:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: gnbdev/opengnb
+          ref: master  # 指定要检出的分支或提交
+          
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.24
+          
+      - name: Install MinGW-w64 cross-compiler
+        run: sudo apt-get update && sudo apt-get install -y mingw-w64
+
+      - name: Build binary for Windows
+        run: |
+          export PREFIX=x86_64-w64-mingw32
+          export CC=$PREFIX-gcc
+          export CXX=$PREFIX-g++
+          export CPP=$PREFIX-cpp
+          export LD=$PREFIX-ld
+          export RANLIB=$PREFIX-ranlib
+          export WINDRES=$PREFIX-windres
+          export PATH="/usr/x86_64-w64-mingw32/bin:$PATH"
+          export CFLAGS=-I/usr/x86_64-w64-mingw32/include/
+          export LDFLAGS=-L/usr/x86_64-w64-mingw32/lib/
+
+          # Modify Makefile to support Windows cross-compilation (you may need to adjust Makefile settings)
+          sed -i 's|\(CC} -o ${GNB_CTL} ${GNB_CTL_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.mingw_x86_64
+          sed -i 's|\(CC} -o ${GNB_ES} ${GNB_ES_OBJS} ${CRYPTO_OBJS} ${MINIUPNP_OBJS} ${LIBNATPMP_OBJS} ${GNB_ES_LDFLAGS}\)|\1 -static|' Makefile.mingw_x86_64
+          sed -i 's|\(CC} -o ${GNB_CRYPTO} ./src/gnb_crypto.o ${CRYPTO_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.mingw_x86_64
+          sed -i 's|\(CC} -o ${GNB_CLI} ${GNB_OBJS} ${GNB_CLI_OBJS} ${GNB_PF_OBJS} ${CRYPTO_OBJS} ${ZLIB_OBJS} ${CLI_LDFLAGS}\)|\1 -static|' Makefile.mingw_x86_64
+
+          # Clean and build for Windows
+          make -f Makefile.mingw_x86_64 clean
+          make -f Makefile.mingw_x86_64 install
+        shell: bash
+
+      - name: Build and Package Windows release
+        run: |
+          mkdir release conf 
+          cp -r bin release/
+          cp -r conf release/
+        shell: bash
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opengnb-windows-x86_64.zip
+          path: release
