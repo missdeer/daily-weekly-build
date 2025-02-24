@@ -84,6 +84,7 @@ jobs:
 
       - name: lipo to make FAT binary
         run: |
+          mkdir -p release/universal
           lipo -create -output release/universal/gnb release/macos_x86_64/bin/gnb release/macos_arm64/bin/gnb
           lipo -create -output release/universal/gnb_ctl release/macos_x86_64/bin/gnb_ctl release/macos_arm64/bin/gnb_ctl
           lipo -create -output release/universal/gnb_crypto release/macos_x86_64/bin/gnb_crypto release/macos_arm64/bin/gnb_crypto
