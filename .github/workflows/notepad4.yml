@@ -39,9 +39,10 @@ jobs:
     env:
       targetName: notepad4-${{ matrix.toolset }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 1
           submodules: true
       
       - name: Set up clang for Windows
@@ -189,7 +190,7 @@ jobs:
           msystem: ${{ matrix.mingw_arch }}
           install: ${{ matrix.mingw_prefix }}-toolchain ${{ matrix.mingw_prefix }}-cmake ${{ matrix.mingw_prefix }}-ninja ${{ matrix.mingw_prefix }}-${{ matrix.toolchains }}  ${{ matrix.mingw_prefix }}-clang ${{ matrix.mingw_prefix }}-make ${{ matrix.mingw_prefix }}-openssl ${{ matrix.mingw_prefix }}-zstd ${{ matrix.mingw_prefix }}-libb2
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 1
