@@ -90,7 +90,7 @@ jobs:
           echo %LATEST_VERSION%
           call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
           set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
-          git clone --recursive --branch https://github.com/missdeer/notepad4.git notepad4-src
+          git clone --recursive --branch avx512 https://github.com/missdeer/notepad4.git notepad4-src
           copy notepad4\CMakeLists.txt notepad4-src\
           cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
           cmake --build cmake-build --parallel --verbose
