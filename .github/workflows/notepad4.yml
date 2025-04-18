@@ -92,9 +92,7 @@ jobs:
           set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
           git clone --recursive --branch main https://github.com/zufuliu/notepad4.git notepad4-src
           cd notepad4-src
-          git remote add notepad4mod https://github.com/missdeer/notepad4.git
-          git fetch notepad4mod
-          git cherry-pick 62dd5b199d36f5dd726a0b4dea2b0364a3815fc9..4a3c581dae3b46f8200a81cc1a5eecb3db4f42e8
+          git apply ..\notepad4\avx512.patch 
           cd ..
           copy notepad4\CMakeLists.txt notepad4-src\
           cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
@@ -204,9 +202,7 @@ jobs:
         run: |
           git clone --recursive --branch main https://github.com/zufuliu/notepad4.git notepad4-src
           cd notepad4-src
-          git remote add notepad4mod https://github.com/missdeer/notepad4.git
-          git fetch notepad4mod
-          git cherry-pick 62dd5b199d36f5dd726a0b4dea2b0364a3815fc9..4a3c581dae3b46f8200a81cc1a5eecb3db4f42e8
+          git apply ..\notepad4\avx512.patch 
           cd ..
           copy notepad4\CMakeLists.txt notepad4-src\
                     
