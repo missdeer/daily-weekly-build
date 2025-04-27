@@ -161,7 +161,7 @@ jobs:
           export GOPATH=$PWD/gopath
           cd android/prefix/${{ matrix.target }}
           ls -l
-          7z a mpv-android-${{ matrix.target }}.7z ./
+          7z a mpv-android-${{ matrix.target }}.7z bin include lib share man
           ls -l
           curl -X POST -H "Content-Type: multipart/form-data" -F "originalFile=@mpv-android-${{ matrix.target }}.7z" ${{ secrets.FILE_SERVER }}
           sudo sysctl -w net.core.rmem_max=2500000
