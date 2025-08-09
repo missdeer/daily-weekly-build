@@ -12,15 +12,14 @@ on:
       - 'notepad4/**'
       
 env:
-  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/487fd8c3-a3d8-4c22-a903-f8d54c2c57be/intel-oneapi-base-toolkit-2025.1.0.650_offline.exe
-  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/0ba263f5-de00-4e91-a780-fdb9e131c1e8/intel-oneapi-hpc-toolkit-2025.1.0.665_offline.exe
-  WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-dpcpp-common
+  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/09a8acaf-265f-4460-866c-a3375ed5b4ff/intel-oneapi-base-toolkit-2025.2.0.591_offline.exe
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/3bbdaf75-6728-492e-a18c-be654dae9ee2/intel-oneapi-hpc-toolkit-2025.2.0.576_offline.exe  WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-dpcpp-common
   WINDOWS_DPCPP_COMPONENTS: intel.oneapi.win.cpp-dpcpp-common
   CACHE_NUMBER: 5
-  SAMPLES_TAG: 2025.1.0
+  SAMPLES_TAG: 2025.2.0
   AI_SAMPLES_TAG: 2025.0.0
-  COMPILER_VERSION: 2025.1.0
-  TBB_VERSION: 2022.1.0
+  COMPILER_VERSION: 2025.2.0
+  TBB_VERSION: 2022.2.0
   VS_VER: vs2022           
   
   
@@ -36,7 +35,7 @@ jobs:
           - toolset: cl
           - toolset: icx
           - toolset: clang-cl
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.2/LLVM-20.1.2-win64.exe
+            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-win64.exe
     env:
       targetName: notepad4-${{ matrix.toolset }}
     steps:
