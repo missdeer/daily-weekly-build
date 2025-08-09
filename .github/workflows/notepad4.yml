@@ -106,13 +106,6 @@ jobs:
           for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
           echo %LATEST_VERSION%        
           copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libmmd.dll" bin\
-          copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libiomp*md.dll" bin\
-          
-      - name: copy clang-cl redist
-        if: matrix.toolset == 'clang-cl'
-        shell: cmd
-        run: |
-          copy /y "%CD%\llvm\bin\lib*omp*.dll" bin\
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
