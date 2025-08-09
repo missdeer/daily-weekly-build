@@ -1,0 +1,118 @@
+diff --git a/scintilla/src/CellBuffer.cxx b/scintilla/src/CellBuffer.cxx
+index 1ae7e0a3..01f4bf15 100644
+--- a/scintilla/src/CellBuffer.cxx
++++ b/scintilla/src/CellBuffer.cxx
+@@ -36,7 +36,7 @@
+ #include "CellBuffer.h"
+ #include "UndoHistory.h"
+ #include "UniConversion.h"
+-//#include "ElapsedPeriod.h"
++#include "ElapsedPeriod.h"
+ 
+ namespace Scintilla::Internal {
+ 
+@@ -443,10 +443,10 @@ const char *CellBuffer::InsertString(Sci::Position position, const char *s, Sci:
+ 			data = uh->AppendAction(ActionType::insert, position, s, insertLength, startSequence);
+ 		}
+ 
+-		// const ElapsedPeriod period;
++		const ElapsedPeriod period;
+ 		BasicInsertString(position, s, insertLength);
+-		// const double duration = period.Duration()*1e3;
+-		// printf("%s duration=%.6f\n", __func__, duration);
++		const double duration = period.Duration()*1e3;
++		printf("%s duration=%.6f\n", __func__, duration);
+ 		if (changeHistory) {
+ 			changeHistory->Insert(position, insertLength, collectingUndo, uh->BeforeReachableSavePoint());
+ 		}
+@@ -829,7 +829,7 @@ void CellBuffer::BasicInsertString(const Sci::Position position, const char * co
+ 	constexpr size_t PositionBlockSize = 128;
+ #endif
+ 
+-	//const ElapsedPeriod period;
++	const ElapsedPeriod period;
+ 	Sci::Position positions[PositionBlockSize];
+ 	size_t nPositions = 0;
+ 	const Sci::Line lineStart = lineInsert;
+@@ -846,7 +846,7 @@ void CellBuffer::BasicInsertString(const Sci::Position position, const char * co
+ 	}
+ 
+ 	// set EditDetectEOLMode()
+-#if 0//NP2_USE_AVX512
++#if 1//NP2_USE_AVX512
+ 	if (utf8LineEnds == LineEndType::Default && ptr + sizeof(__m512i) <= end) {
+ 		const __m512i vectCR = _mm512_set1_epi32('\r' * 0x01010101);
+ 		const __m512i vectLF = _mm512_set1_epi32('\n' * 0x01010101);
+@@ -1215,9 +1215,9 @@ void CellBuffer::BasicInsertString(const Sci::Position position, const char * co
+ 		}
+ 	}
+ 
+-	//const double duration = period.Duration()*1e3;
+-	//printf("%s avx2=%d, cache=%d, perLine=%d, duration=%f\n", __func__, NP2_USE_AVX2,
+-	//	(int)PositionBlockSize, InsertString_WithoutPerLine, duration);
++	const double duration = period.Duration()*1e3;
++	printf("%s avx2=%d, cache=%d, perLine=%d, duration=%f\n", __func__, NP2_USE_AVX2,
++		(int)PositionBlockSize, InsertString_WithoutPerLine, duration);
+ 
+ 	// Joining two lines where last insertion is cr and following substance starts with lf
+ 	if (chAfter == '\n') {
+diff --git a/scintilla/src/Editor.cxx b/scintilla/src/Editor.cxx
+index b2a1d885..3a2ad291 100644
+--- a/scintilla/src/Editor.cxx
++++ b/scintilla/src/Editor.cxx
+@@ -8219,10 +8219,10 @@ sptr_t Editor::WndProc(Message iMessage, uptr_t wParam, sptr_t lParam) {
+ 	case Message::BraceMatch: {
+ 		// wParam is position of char to find brace for,
+ 		// lParam is maximum amount of text to restyle to find it
+-		// const ElapsedPeriod period;
++		const ElapsedPeriod period;
+ 		const Sci::Position position = pdoc->BraceMatch(PositionFromUPtr(wParam), lParam, 0, false);
+-		// const double duration = period.Duration()*1e3;
+-		// printf("BraceMatch %zu / %zd, %zd / %zd, %f\n", wParam, position, pdoc->GetEndStyled(), pdoc->LengthNoExcept(), duration);
++		const double duration = period.Duration()*1e3;
++		printf("BraceMatch %zu / %zd, %zd / %zd, %f\n", wParam, position, pdoc->GetEndStyled(), pdoc->LengthNoExcept(), duration);
+ 		return position;
+ 	}
+ 
+diff --git a/src/Edit.cpp b/src/Edit.cpp
+index 172a4556..26f46362 100644
+--- a/src/Edit.cpp
++++ b/src/Edit.cpp
+@@ -1171,12 +1171,12 @@ bool EditLoadFile(LPWSTR pszFile, EditFileIOStatus &status) noexcept {
+ 	}
+ 
+ 	if (cbData) {
+-		// StopWatch watch;
+-		// watch.Start();
++		StopWatch watch;
++		watch.Start();
+ 		EditDetectEOLMode(lpDataUTF8 - offset, cbData + offset, status);
+-		// watch.Stop();
+-		// watch.ShowLog("EOL time");
+-		// printf("CR+LF: %zu, LF: %zu, CR: %zu\n", status.linesCount[SC_EOL_CRLF], status.linesCount[SC_EOL_LF], status.linesCount[SC_EOL_CR]);
++		watch.Stop();
++		watch.ShowLog("EOL time");
++		printf("CR+LF: %zu, LF: %zu, CR: %zu\n", status.linesCount[SC_EOL_CRLF], status.linesCount[SC_EOL_LF], status.linesCount[SC_EOL_CR]);
+ 		EditDetectIndentation(lpDataUTF8, cbData, fvCurFile);
+ 	}
+ 	SciCall_SetCodePage((uFlags & NCP_DEFAULT) ? iDefaultCodePage : SC_CP_UTF8);
+diff --git a/src/Notepad4.cpp b/src/Notepad4.cpp
+index b733edbf..672026bf 100644
+--- a/src/Notepad4.cpp
++++ b/src/Notepad4.cpp
+@@ -487,7 +487,7 @@ BOOL WINAPI ConsoleHandlerRoutine(DWORD dwCtrlType) noexcept {
+ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd) {
+ 	UNREFERENCED_PARAMETER(hPrevInstance);
+ 	UNREFERENCED_PARAMETER(lpCmdLine);
+-#if 0 // used for Clang UBSan or printing debug message on console.
++#if 1 // used for Clang UBSan or printing debug message on console.
+ 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+ 		SetConsoleCtrlHandler(ConsoleHandlerRoutine, TRUE);
+ 		freopen("CONOUT$", "w", stdout);
+diff --git a/wiki b/wiki
+index 3f268285..aa78a970 160000
+--- a/wiki
++++ b/wiki
+@@ -1 +1 @@
+-Subproject commit 3f268285b4c53df55426feedc794de1af056707d
++Subproject commit aa78a9707065488b4059c760b67bdacea8dac9cb
