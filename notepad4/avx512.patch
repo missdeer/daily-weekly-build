@@ -1,0 +1,68 @@
+diff --git a/matepath/src/Helpers.cpp b/matepath/src/Helpers.cpp
+index 37fb0e99..fb662c04 100644
+--- a/matepath/src/Helpers.cpp
++++ b/matepath/src/Helpers.cpp
+@@ -498,7 +498,7 @@ bool BitmapAlphaBlend(HBITMAP hbmp, COLORREF crDest, BYTE alpha) noexcept {
+ 	BITMAP bmp;
+ 	if (GetObject(hbmp, sizeof(BITMAP), &bmp)) {
+ 		if (bmp.bmBitsPixel == 32) {
+-#if 0//NP2_USE_AVX512
++#if NP2_USE_AVX512
+ 			#define BitmapAlphaBlend_Tag	"avx512 8x1"
+ 			const ULONG count = (bmp.bmHeight * bmp.bmWidth) / 8;
+ 			__m256i *prgba = static_cast<__m256i *>(bmp.bmBits);
+diff --git a/scintilla/src/CellBuffer.cxx b/scintilla/src/CellBuffer.cxx
+index 1ae7e0a3..ee1e081f 100644
+--- a/scintilla/src/CellBuffer.cxx
++++ b/scintilla/src/CellBuffer.cxx
+@@ -846,7 +846,7 @@ void CellBuffer::BasicInsertString(const Sci::Position position, const char * co
+ 	}
+ 
+ 	// set EditDetectEOLMode()
+-#if 0//NP2_USE_AVX512
++#if NP2_USE_AVX512
+ 	if (utf8LineEnds == LineEndType::Default && ptr + sizeof(__m512i) <= end) {
+ 		const __m512i vectCR = _mm512_set1_epi32('\r' * 0x01010101);
+ 		const __m512i vectLF = _mm512_set1_epi32('\n' * 0x01010101);
+@@ -931,7 +931,7 @@ void CellBuffer::BasicInsertString(const Sci::Position position, const char * co
+ 
+ 			const __m256i chunk1 = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(ptr));
+ 			const __m256i chunk2 = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(ptr + sizeof(__m256i)));
+-#if 0//NP2_USE_AVX512
++#if NP2_USE_AVX512
+ 			uint64_t maskLF = _mm512_kunpackd(_mm256_cmpeq_epi8_mask(chunk2, vectLF), _mm256_cmpeq_epi8_mask(chunk1, vectLF));
+ 			uint64_t maskCR = _mm512_kunpackd(_mm256_cmpeq_epi8_mask(chunk2, vectCR), _mm256_cmpeq_epi8_mask(chunk1, vectCR));
+ #else
+diff --git a/scintilla/src/XPM.cxx b/scintilla/src/XPM.cxx
+index 8456a5fb..d617e815 100644
+--- a/scintilla/src/XPM.cxx
++++ b/scintilla/src/XPM.cxx
+@@ -264,7 +264,7 @@ void RGBAImage::SetPixel(int x, int y, ColourRGBA colour) noexcept {
+ void RGBAImage::BGRAFromRGBA(unsigned char *pixelsBGRA, const unsigned char *pixelsRGBA, size_t count) noexcept {
+ 	static_assert(UCHAR_MAX == 255);
+ 	// reduce code size for clang auto vectorization, we no longer use XPM for bookmark symbol.
+-#if 0//NP2_USE_AVX512
++#if NP2_USE_AVX512
+ 	count /= (sizeof(__m256i) / bytesPerPixel);
+ 	__m256i *pbgra = reinterpret_cast<__m256i *>(pixelsBGRA);
+ 	const __m256i *prgba = reinterpret_cast<const __m256i *>(pixelsRGBA);
+diff --git a/src/Helpers.cpp b/src/Helpers.cpp
+index f244dd79..0516b65d 100644
+--- a/src/Helpers.cpp
++++ b/src/Helpers.cpp
+@@ -620,7 +620,7 @@ bool BitmapAlphaBlend(HBITMAP hbmp, COLORREF crDest, BYTE alpha) noexcept {
+ 			//FILE *fp = fopen("bitmap.dat", "wb");
+ 			//fwrite(bmp.bmBits, 1, bmp.bmHeight*bmp.bmWidth*4, fp);
+ 			//fclose(fp);
+-#if 0//NP2_USE_AVX512
++#if NP2_USE_AVX512
+ 			#define BitmapAlphaBlend_Tag	"avx512 8x1"
+ 			const ULONG count = (bmp.bmHeight * bmp.bmWidth) / 8;
+ 			__m256i *prgba = static_cast<__m256i *>(bmp.bmBits);
+diff --git a/wiki b/wiki
+index 3f268285..aa78a970 160000
+--- a/wiki
++++ b/wiki
+@@ -1 +1 @@
+-Subproject commit 3f268285b4c53df55426feedc794de1af056707d
++Subproject commit aa78a9707065488b4059c760b67bdacea8dac9cb

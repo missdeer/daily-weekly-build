@@ -80,6 +80,21 @@ jobs:
           cd oneapi-ci
           scripts/restore_registry.bat ${{ env.COMPILER_VERSION }} ${{ env.TBB_VERSION }}
 
+      - name: clone notepad4
+        shell: cmd
+        run: |
+          git clone --recursive https://github.com/zufuliu/notepad4.git notepad4-src
+          copy notepad4\CMakeLists.txt notepad4-src\
+          
+      - name: apply avx512 patch
+        if: matrix.avx512 == 'ON'
+        shell: cmd
+        run: |
+          copy notepad4\avx512.patch notepad4-src\
+          cd notepad4-src
+          git apply avx512.patch
+          cd ..
+          
       - name: build
         shell: cmd
         env:
@@ -90,8 +105,6 @@ jobs:
           echo %LATEST_VERSION%
           call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
           set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
-          git clone --recursive --branch avx512 https://github.com/missdeer/notepad4.git notepad4-src
-          copy notepad4\CMakeLists.txt notepad4-src\
           cmake -DAVX512=${{ matrix.avx512 }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja -S notepad4-src -B cmake-build
           cmake --build cmake-build --parallel --verbose
           mkdir bin
@@ -187,11 +200,20 @@ jobs:
           fetch-depth: 1
           submodules: true
                      
-      - name: prepare
+      - name: clone notepad4
         shell: cmd
         run: |
-          git clone --recursive --branch avx512 https://github.com/missdeer/notepad4.git notepad4-src
+          git clone --recursive https://github.com/zufuliu/notepad4.git notepad4-src
           copy notepad4\CMakeLists.txt notepad4-src\
+          
+      - name: apply avx512 patch
+        if: matrix.avx512 == 'ON'
+        shell: cmd
+        run: |
+          copy notepad4\avx512.patch notepad4-src\
+          cd notepad4-src
+          git apply avx512.patch
+          cd ..
                     
       - name: build
         shell: msys2 {0}
