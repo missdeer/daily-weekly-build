@@ -33,6 +33,13 @@ jobs:
         toolset: [cl, icx, clang-cl]
         msvc_arch: [x64]
         avx512: [ON, OFF]
+        include:
+          - toolset: cl
+            desc: MSVC
+          - toolset: icx
+            desc: oneAPI-Intel-CPU-Only
+          - toolset: clang-cl        
+            desc: LLVM-Clang-MSVC
     env:
       targetName: notepad4-${{ matrix.toolset }}
     steps:
@@ -121,14 +128,14 @@ jobs:
         if: matrix.avx512 == 'OFF'
         with:
           path: bin
-          name: notepad4-${{ matrix.toolset }}-avx2
+          name: notepad4-${{ matrix.desc }}-avx2
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v4
         if: matrix.avx512 == 'ON'
         with:
           path: bin
-          name: notepad4-${{ matrix.toolset }}-avx512
+          name: notepad4-${{ matrix.desc }}-avx512
 
   notepad4-nightly-mingw:
     runs-on: windows-latest
