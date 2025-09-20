@@ -12,8 +12,8 @@ on:
       - 'notepad4/**'
       
 env:
-  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/09a8acaf-265f-4460-866c-a3375ed5b4ff/intel-oneapi-base-toolkit-2025.2.0.591_offline.exe
-  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/3bbdaf75-6728-492e-a18c-be654dae9ee2/intel-oneapi-hpc-toolkit-2025.2.0.576_offline.exe
+  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/f5881e61-dcdc-40f1-9bd9-717081ac623c/intel-oneapi-base-toolkit-2025.2.1.46_offline.exe
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/e63ac2b4-8a9a-4768-979a-399a8b6299de/intel-oneapi-hpc-toolkit-2025.2.1.46_offline.exe
   WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-dpcpp-common
   WINDOWS_DPCPP_COMPONENTS: intel.oneapi.win.cpp-dpcpp-common
   CACHE_NUMBER: 5
@@ -21,7 +21,8 @@ env:
   AI_SAMPLES_TAG: 2025.0.0
   COMPILER_VERSION: 2025.2.0
   TBB_VERSION: 2022.2.0
-  VS_VER: vs2022           
+  VS_VER: vs2022     
+  clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.1/LLVM-21.1.1-win64.exe      
   
   
 jobs:
@@ -32,11 +33,6 @@ jobs:
         toolset: [cl, icx, clang-cl]
         msvc_arch: [x64]
         avx512: [ON, OFF]
-        include:
-          - toolset: cl
-          - toolset: icx
-          - toolset: clang-cl
-            clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-win64.exe
     env:
       targetName: notepad4-${{ matrix.toolset }}
     steps:
@@ -52,7 +48,7 @@ jobs:
         run: |
           mkdir llvm
           cd llvm
-          curl.exe -o LLVM.exe -L ${{ matrix.clang_link }}
+          curl.exe -o LLVM.exe -L ${{ env.clang_link }}
           7z.exe x LLVM.exe
           cd ..
 
