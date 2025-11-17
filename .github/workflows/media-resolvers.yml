@@ -16,10 +16,40 @@ jobs:
         shell: cmd
         run: |
           pip install pyinstaller m3u8
+          
+      - name: Set up Go 
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.25
+        id: go
 
       - name: Set up Release Date
         run: echo "RELEASE_DATE=v$(Get-Date -Format "yyyy.MM.dd")" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         shell: powershell
+        
+      - name: make lux
+        shell: cmd
+        run: |
+          git clone --depth=1 --single-branch --branch master https://github.com/iawia002/lux.git
+          cd lux
+          go build -ldflags="-s -w" -o lux.exe
+          cd ..
+          
+      - name: upload lux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: lux.exe
+          name: lux.exe
+  
+      - name: upload lux Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: lux.exe
+          asset_name: lux.exe
+          release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
+          overwrite: true
 
       - name: make ykdl
         shell: cmd
@@ -105,10 +135,44 @@ jobs:
       - name: install pyinstaller
         run: |
           pip install --upgrade pyinstaller m3u8
+  
+      - name: Set up Go 
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.25
+        id: go
+
 
       - name: Set up Release Date
         run: echo "RELEASE_DATE=v$(Get-Date -Format "yyyy.MM.dd")" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         shell: powershell
+        
+
+      - name: make lux
+        shell: bash
+        run: |
+          git clone --depth=1 --single-branch --branch master https://github.com/iawia002/lux.git lux-src
+          cd lux-src
+          env GOARCH=amd64 go build -ldflags="-s -w" -o lux-amd64
+          env GOARCH=arm64 go build -ldflags="-s -w" -o lux-arm64
+          lipo -create -output lux lux-amd64 lux-arm64
+          cd ..
+    
+      - name: upload lux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: lux
+          name: lux
+  
+      - name: upload lux Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: lux
+          asset_name: lux
+          release_name: ${{ env.RELEASE_DATE }}
+          tag: ${{ env.RELEASE_DATE }}
+          overwrite: true
 
       - name: make ykdl
         run: |
