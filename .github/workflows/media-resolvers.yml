@@ -33,6 +33,7 @@ jobs:
           git clone --depth=1 --single-branch --branch master https://github.com/iawia002/lux.git
           cd lux
           go build -ldflags="-s -w" -o lux.exe
+          copy /y lux.exe ..\lux.exe
           cd ..
           
       - name: upload lux artifact
@@ -156,6 +157,7 @@ jobs:
           env GOARCH=amd64 go build -ldflags="-s -w" -o lux-amd64
           env GOARCH=arm64 go build -ldflags="-s -w" -o lux-arm64
           lipo -create -output lux lux-amd64 lux-arm64
+          cp lux ../lux
           cd ..
     
       - name: upload lux artifact
