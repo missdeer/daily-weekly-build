@@ -55,7 +55,7 @@ jobs:
       - name: make ykdl
         shell: cmd
         run: |
-          git clone --depth=1 --single-branch --branch master https://github.com/SeaHOH/ykdl.git
+          git clone --depth=1 --single-branch --branch master https://github.com/LifeActor/ykdl.git
           cd ykdl
           pyinstaller.exe cykdl\__main__.py --onefile --name ykdl 
           dir dist
