@@ -21,7 +21,7 @@ jobs:
           unzip GeoLite2-Country-CSV.zip
           find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
           cd GeoLite2-Country-CSV
-          curl -o cn_cidr.txt -L https://cdn.jsdelivr.net/gh/17mon/china_ip_list@master/china_ip_list.txt
+          awk -F ',' 'NR==FNR && $0 ~ /,CN,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > cn_cidr.txt
           awk -F ',' 'NR==FNR && $0 ~ /,IT,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > it_cidr.txt
           awk -F ',' 'NR==FNR && $0 ~ /,US,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > us_cidr.txt
           awk -F ',' 'NR==FNR && $0 ~ /,JP,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > jp_cidr.txt
