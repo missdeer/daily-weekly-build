@@ -1,69 +1,66 @@
 name: cidr
-on: 
+
+on:
+  workflow_dispatch:
   schedule:
-    - cron:  '0 4 * * *'
+    - cron: '0 4 * * *'
   push:
     paths:
+      - '.github/scripts/generate_cidrs.py'
+      - '.github/scripts/test_generate_cidrs.py'
       - '.github/workflows/cidr.yml'
   pull_request:
     paths:
+      - '.github/scripts/generate_cidrs.py'
+      - '.github/scripts/test_generate_cidrs.py'
       - '.github/workflows/cidr.yml'
+
+concurrency:
+  group: cidr-publish
+  cancel-in-progress: false
 
 jobs:
   route:
     runs-on: ubuntu-latest
-    steps:          
-      - name: Generate cidr files
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Test CIDR generator
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
+
+      - name: Download GeoLite2 country data
         env:
-          MAXMIND_LICENSEKEY: ${{ secrets.MAXMIND_LICENSEKEY }}    
+          MAXMIND_LICENSEKEY: ${{ secrets.MAXMIND_LICENSEKEY }}
         run: |
-          curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key=${MAXMIND_LICENSEKEY}&suffix=zip" -o GeoLite2-Country-CSV.zip
-          unzip GeoLite2-Country-CSV.zip
-          find . -name 'GeoLite2-Country-CSV_*' -type d | while read dir; do mv $dir "GeoLite2-Country-CSV"; done
-          cd GeoLite2-Country-CSV
-          awk -F ',' 'NR==FNR && $0 ~ /,CN,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > cn_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,IT,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > it_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,US,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > us_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,JP,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > jp_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,TW,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > tw_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,HK,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > hk_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,SG,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > sg_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,KR,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > kr_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,RU,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > ru_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,GB,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > gb_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,FR,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > fr_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,DE,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > de_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,SE,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > se_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,ES,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > es_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,NL,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > nl_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,AS,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > as_cidr.txt
-          cat cn_cidr.txt jp_cidr.txt tw_cidr.txt hk_cidr.txt kr_cidr.txt sg_cidr.txt > combined_cidrs.txt
-          grep -v -F -f combined_cidrs.txt as_cidr.txt > as_cidr_filtered.txt
-          mv as_cidr_filtered.txt as_cidr.txt
-          rm combined_cidrs.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,EU,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > eu_cidr.txt
-          cat it_cidr.txt ru_cidr.txt gb_cidr.txt fr_cidr.txt nl_cidr.txt se_cidr.txt es_cidr.txt de_cidr.txt > combined_cidrs.txt
-          grep -v -F -f combined_cidrs.txt eu_cidr.txt > eu_cidr_filtered.txt
-          mv eu_cidr_filtered.txt eu_cidr.txt
-          rm combined_cidrs.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,OC,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > oc_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,AF,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > af_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,SA,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > sa_cidr.txt
-          awk -F ',' 'NR==FNR && $0 ~ /,NA,/ {id=$1; next} NR!=FNR && $0 ~ id {split($1, arr, "/"); print arr[1]}' GeoLite2-Country-Locations-zh-CN.csv GeoLite2-Country-Blocks-IPv4.csv > na_cidr.txt
-          grep -v -F -f us_cidr.txt na_cidr.txt > na_cidr_filtered.txt
-          mv na_cidr_filtered.txt na_cidr.txt
-          mkdir ../cidrs
-          mv *_cidr.txt ../cidrs/
-          cd ../cidrs
-          
-      - name: Upload to GitHub Repository
+          set -euo pipefail
+          curl --fail --show-error --location --retry 3 \
+            "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key=${MAXMIND_LICENSEKEY}&suffix=zip" \
+            --output GeoLite2-Country-CSV.zip
+          unzip -q GeoLite2-Country-CSV.zip
+
+      - name: Generate CIDR files
+        run: |
+          set -euo pipefail
+          data_dir=$(find . -maxdepth 1 -name 'GeoLite2-Country-CSV_*' -type d -print -quit)
+          test -n "$data_dir"
+          python3 .github/scripts/generate_cidrs.py \
+            "$data_dir/GeoLite2-Country-Locations-zh-CN.csv" \
+            "$data_dir/GeoLite2-Country-Blocks-IPv4.csv" \
+            cidrs
+
+      - name: Upload to GitHub repository
+        if: github.event_name != 'pull_request'
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}    
-        run: |    
-          cd cidrs  
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        working-directory: cidrs
+        run: |
+          set -euo pipefail
           git init
           git add .
           git config user.name "update-cidrs[bot]"
           git config user.email "update-cidrs[bot]@users.noreply.github.com"
-          git commit -m "update cidrs at $(date)" .
-          git push --force --quiet https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git master:cidr
+          git commit -m "update cidrs at $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git push --force --quiet \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            HEAD:cidr
